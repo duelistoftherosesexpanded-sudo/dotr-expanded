@@ -1,13 +1,104 @@
 # Duelists of the Roses Expanded
 
-**Duelists of the Roses Expanded** (v0.55 beta) is a mod built on the decompilation below. It adds
-hundreds of new cards with 3D models, card eras you can switch on and off in MOD OPTIONS, a card
-shop, achievements, coloured card frames and widescreen. The mod's code is in
-[mods/widescreen/](mods/widescreen/) and its tools are in [tools/](tools/).
+**Duelists of the Roses Expanded** (v0.55 beta) is a fan mod of *Yu-Gi-Oh! The Duelists of the
+Roses* (PS2, USA) for PCSX2. It is built on the byte-matching decompilation below and on the SPEX
+community patch.
 
-No game data is in this repository: no disc images, models, textures or card art. The setup tool
-(`tools/setup_tool.py`) builds everything from your own copies of the games: Duelists of the Roses, The Dawn of
-Destiny, The Falsebound Kingdom, Cross Duel and Saikyo Card Battle.
+## What it adds
+
+- **576 new cards**, numbered past the game's original limit (up to 1448). Each one has its own
+  card art, a password and a 3D monster model in duels. The models come from other Yu-Gi-Oh! games:
+
+  | Model source | Cards |
+  | --- | --- |
+  | Saikyo Card Battle (3DS) | 248 |
+  | Cross Duel (mobile) | 156 |
+  | The Dawn of Destiny (Xbox) | 68 |
+  | The Falsebound Kingdom (GameCube) | 3 |
+  | "Picture frame" models showing the card's art, for cards no game has a model for | 100 |
+
+- **Card eras.** Every card belongs to one of seven eras by its first TCG release: OG (before
+  2004, always on), GX (2004-08), 5D's (2008-11), ZEXAL (2011-14), ARC-V (2014-17), VRAINS (2017-20)
+  and Modern (2020 on). MOD OPTIONS on the title screen sets the newest era allowed. Choosing an era
+  also allows every era before it.
+
+### Card frames
+
+- Monster cards can have **frames in new colours**, set per card in the Card Maker. Any monster can
+  also use the normal (yellow) or effect (orange) frame, whatever its type.
+- The frame colour shows everywhere the card does: on the field, in the hand, in the chest and on
+  the card detail panel.
+
+### Widescreen
+
+- The game is drawn in **16:9**, not 4:3 stretched.
+- The 2D interface (menus, panels, the hand) is redrawn at its proper width so nothing
+  looks stretched. Each piece stays pinned to its screen edge or to the centre.
+- The highlight around cards in the hand and on the field lines up with the wider 3D view.
+
+### Card quality of life
+
+- **Three copies of a card at most.** Deck tabs share one collection: change tabs and every card is
+  back in the chest, so three copies cover all your decks. Older saves are trimmed to three copies
+  when they load.
+- **Any monster can lead a deck**, the new cards included. Experience is never taken away, so a
+  leader never loses a rank it has reached.
+- **Simple passwords.** Every card's password is its card number with eight digits (Blue-Eyes White
+  Dragon is 00000000, card 132 is 00000132), so any card can be typed in at the deck builder.
+- **Stacked effects.** A monster's effect slot can hold more than one effect.
+- **AI SPEED** in the duel settings: FAST plays the computer's turn at double speed.
+- **Xbox button pictures** as an option in MOD OPTIONS.
+- New cards sort by name with the game's own cards in the card lists.
+- **A card shop, 12 achievements and new card sleeves** (some sleeves are achievement rewards).
+- **A bigger save.** Your collection of new cards is saved alongside the game's own save data.
+
+### Additional campaign
+
+- **A second world.** A gate podium on the campaign map leads to a recoloured copy of the map,
+  with green land and blue sea. It has 20 new duels against the story's duelists, from Yugi and
+  Seto to Pegasus and Manawyddan fab Llyr.
+- **New decks for every boss**, one picked at random after each duel, with up to three copies of a
+  card.
+- **Deck Masters.** Four new opponents (Deck Masters T, K, I and S) stand on podiums of their own.
+  The **Card Shop** is on the map too.
+- **Fields made for the deck.** In a duel against one of these bosses the board is generated at
+  the start of the duel from the boss's deck: patches of the terrains its monsters like, different
+  every duel.
+
+## Tools
+
+- **Setup tool** (`tools/setup_tool.py`, or `DotR Expanded Setup.exe` in a release): builds a
+  playable disc and a portable PCSX2 from your own copies of the games. It can also make a
+  developer copy of the project.
+- **Card Maker** (`Card Maker.bat`, `tools/card_maker.py`): add or change cards. Set the art, model,
+  frame colour and era, and choose whether a test build hands out every card.
+- **Launcher** (`DotR Launcher.bat`): runs the mod in PCSX2 and rebuilds when files change.
+
+The mod's code is in [mods/widescreen/](mods/widescreen/) (the C in `dlc/` is loaded by the game as
+DLC.BIN) and its tools are in [tools/](tools/).
+
+## No game data
+
+This repository has no disc images, models, textures, sounds or card art. The setup tool builds all
+of them on your computer from your own copies of: Duelists of the Roses (PS2, USA), The Dawn of
+Destiny (Xbox), The Falsebound Kingdom (GameCube), Cross Duel (Android) and Saikyo Card Battle (3DS).
+
+## Credits
+
+- **zusk**, for the byte-by-byte matching decompilation of Duelists of the Roses below. Expanded
+  could not exist without it: every new feature is written against its C code and names.
+- **Starlight Phoenix Project**, for [DOTR SPEX](mods/widescreen/community/spex/LICENSE.txt). The
+  game Expanded plays is always SPEX 1.0, and the SPEX extra patches are offered too (CC BY 4.0).
+- **batzpup**, for [DotrModdingToolRedux](https://github.com/batzpup/DotrModdingToolRedux), whose
+  card and image layouts guided our card editing tools (no code copied).
+- The wider DotR community and research the decompilation draws on, listed in
+  [docs/REFERENCES.md](docs/REFERENCES.md): kira-502's parallel decompilation,
+  GenericMadScientist's DotR documentation, batzpup's Ghidra project and DOTR-Rebuilt.
+- Card art comes from [YGOPRODeck](https://ygoprodeck.com/)'s card database, downloaded by the
+  setup tool.
+
+This is an unofficial fan project. It is not affiliated with, endorsed by or sponsored by Konami.
+Yu-Gi-Oh! and every game named here are trademarks of their respective owners.
 
 ---
 
