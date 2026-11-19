@@ -1,0 +1,17 @@
+{
+  "_about": "Community patches offered by the title screen's MOD OPTIONS (dlc/modoptions.c, tools/dlc_community.py). Each .ppf is made against the original NTSC-U disc; only its bytes in the executable are used, applied in memory while the patch is chosen. A 'main' patch replaces the game's data and code; an 'extra' goes on top of the game (for: original) or of a main patch (for: its id).",
+  "main": [
+    {"id": "spex", "name": "SPEX 1.0", "ppf": "community/spex/SPEX 1.0-U Base Patch.ppf",
+     "credit": "DOTR SPEX by Starlight Phoenix Project, CC BY 4.0"}
+  ],
+  "extras": [
+    {"id": "boost2", "name": "BOOST FIX 2", "for": "spex", "ppf": "community/spex/SPEX 1.0-U Boost Fix 2.ppf",
+     "note": "SPEX has Boost Fix 1 built in; this is the alternative"},
+    {"id": "powerup_reset", "name": "POWERUP RESET", "for": "original", "ppf": "community/spex/SPEX 1.0-U Powerup Reset.ppf",
+     "note": "writes nothing new over SPEX 1.0, so it is offered with the game only"},
+    {"id": "competition", "name": "COMPETITION MODE", "for": "original", "ppf": "community/spex/SPEX 1.0-U Competition Mode.ppf",
+     "note": "built into SPEX"},
+    {"id": "treasure", "name": "TREASURE FIX", "for": "original", "ppf": "community/spex/SPEX 1.0-U Treasure Fix.ppf",
+     "note": "built into SPEX"}
+  ]
+}

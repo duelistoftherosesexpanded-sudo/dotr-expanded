@@ -1,0 +1,1146 @@
+/* GT4_BOX_IN__2DMAP (0x1095d0, 596 bytes), writes the screen rectangle of a four-vertex textured packet.
+ * Yu-Gi-Oh! The Duelists of the Roses, NTSC-U SLUS_205.15. Evidence: docs/modules/other.md.
+ *
+ * ORIGINAL-FILE UNIT: the 44 functions that precede GT4_BOX_IN__2DMAP in the original source file
+ * (OBJ_ROT 0x106de0 ... G4_BOX_IN__ 0x1094f0) are compiled
+ * first, in this one translation unit, as compiler context (docs/DECOMPILATION.md,
+ * "Original-file units"). GT4_BOX_IN__2DMAP compiles to the original only after all of them, in
+ * this order; tools/match.py places them at their own addresses and compares GT4_BOX_IN__2DMAP.
+ * Each of them also has its own source elsewhere in the tree. The host build sees only
+ * GT4_BOX_IN__2DMAP (the block is `#ifdef __MWERKS__`), except one typedef of the context,
+ * Xyzf_001094F0, which the block leaves visible because GT4_BOX_IN__2DMAP's own vertex type
+ * uses it (preprocessor only).
+ */
+#include "dotr/ee/gt4_box.h"
+
+#ifdef __MWERKS__
+/* ---- Compiler context: the original file's functions before GT4_BOX_IN__2DMAP. ---- */
+
+void OBJ_ROT(f32 x, f32 y, f32 z, s32 *out) {
+    extern s32 func_001a22c0(f32);
+
+    out[0] = func_001a22c0(x);
+    out[1] = func_001a22c0(y);
+    out[2] = func_001a22c0(z);
+}
+
+void OBJ_I_V_IN(s32 *dst, f32 *src) {
+    extern s32 func_001a22c0(f32);
+
+    dst[0] = func_001a22c0(src[0]);
+    dst[1] = func_001a22c0(src[1]);
+    dst[2] = func_001a22c0(src[2]);
+}
+
+void OBJ_VE_SCL_KAKE(void *arg0, void *arg1) {
+    f32 *dst = arg0;
+    f32 *src = arg1;
+
+    dst[0] *= src[0];
+    dst[1] *= src[1];
+    dst[2] *= src[2];
+}
+
+void OBJ_VE_SCL_KAKE_4(void *arg0, void *arg1) {
+    f32 *matrix = (f32 *)arg0;
+    f32 *scale = (f32 *)arg1;
+
+    matrix[0] *= scale[0];
+    matrix[1] *= scale[1];
+    matrix[2] *= scale[2];
+    matrix[4] *= scale[0];
+    matrix[5] *= scale[1];
+    matrix[6] *= scale[2];
+    matrix[8] *= scale[0];
+    matrix[9] *= scale[1];
+    matrix[10] *= scale[2];
+    matrix[12] *= scale[0];
+    matrix[13] *= scale[1];
+    matrix[14] *= scale[2];
+}
+
+void POS_POS_4(f32 *dst, f32 *src) {
+    dst[0] += src[0];
+    dst[1] += src[1];
+    dst[2] += src[2];
+    dst[4] += src[0];
+    dst[5] += src[1];
+    dst[6] += src[2];
+    dst[8] += src[0];
+    dst[9] += src[1];
+    dst[10] += src[2];
+    dst[12] += src[0];
+    dst[13] += src[1];
+    dst[14] += src[2];
+}
+
+s32 XYZ_POS_4(void *arg0, s64 arg1, f32 fparg0) {
+    f32 (*matrix)[4] = (f32 (*)[4])arg0;
+
+    if (arg1 == 0) {
+        matrix[0][0] += fparg0;
+        matrix[1][0] += fparg0;
+        matrix[2][0] += fparg0;
+        matrix[3][0] += fparg0;
+    } else if ((s16)arg1 == 1) {
+        matrix[0][1] += fparg0;
+        matrix[1][1] += fparg0;
+        matrix[2][1] += fparg0;
+        matrix[3][1] += fparg0;
+    } else {
+        matrix[0][2] += fparg0;
+        matrix[1][2] += fparg0;
+        matrix[2][2] += fparg0;
+        matrix[3][2] += fparg0;
+    }
+    return 0;
+}
+
+s32 POINT_IN_VECTOR_(void *arg0, void *arg1, s32 arg2) {
+    if (arg2 == 0) {
+        ((f32 *)arg0)[0] = ((f32 *)arg1)[0];
+        ((f32 *)arg0)[1] = ((f32 *)arg1)[1];
+        ((f32 *)arg0)[2] = ((f32 *)arg1)[2];
+    } else {
+        ((f32 *)arg1)[0] = ((f32 *)arg0)[0];
+        ((f32 *)arg1)[1] = ((f32 *)arg0)[1];
+        ((f32 *)arg1)[2] = ((f32 *)arg0)[2];
+    }
+    return 0;
+}
+
+
+static inline void reduce_00107180(f32 *value) {
+    *value -= 0.18f;
+    if (*value < 0.0f) {
+        *value = 0.0f;
+    }
+}
+
+s32 MODEL_OFF(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    f32 values[3];
+
+    if ((SzEffect_IsModelStandby2(arg0) != 0) && (arg3 != 0)) {
+        SzEffect_GetModelScale2(arg0, values);
+        reduce_00107180(values);
+        reduce_00107180(&values[1]);
+        reduce_00107180(&values[2]);
+        SzEffect_SetModelScale2(arg0, values);
+    }
+    return 0;
+}
+
+s32 CARD_OFF(s32 arg0) {
+    u8 data[4];
+    u8 temp_v0;
+
+    if (SzEffect_IsCardStandby2(arg0) != 0) {
+        SzEffect_GetCardRgba2(arg0, data);
+        temp_v0 = data[3];
+        if (temp_v0 > 0x14) {
+            data[3] = temp_v0 - 0x13;
+        } else {
+            data[3] = 0;
+        }
+        SzEffect_SetCardRgba2(arg0, (s32) data);
+        if (data[3] == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+s32 MODEL_ON(s32 arg0, s32 arg1, s32 arg2) {
+    f32 scale[3];
+
+    if ((SzEffect_IsModelStandby2(arg0) != 0) && (arg2 != 0)) {
+        scale[0] = 1.0f;
+        scale[1] = 1.0f;
+        scale[2] = 1.0f;
+        SzEffect_SetModelScale2(arg0, scale);
+    }
+    return 0;
+}
+
+
+static inline void add_clamped_00107370(f32 *value, f32 amount) {
+    *value += amount;
+    if (!(*value <= 1.0f)) {
+        *value = 1.0f;
+    }
+}
+
+s32 MODEL_SCL_ON_1(s32 arg0, f32 fparg0) {
+    f32 color[3];
+
+    if (SzEffect_IsModelStandby2(arg0) != 0) {
+        SzEffect_GetModelScale2(arg0, color);
+        add_clamped_00107370(&color[0], fparg0);
+        add_clamped_00107370(&color[1], fparg0);
+        add_clamped_00107370(&color[2], fparg0);
+        SzEffect_SetModelScale2(arg0, color);
+    }
+    return 0;
+}
+
+
+static inline void subtract_00107450(f32 *value, f32 amount) {
+    *value -= amount;
+    if (*value < 0.0f) {
+        *value = 0.0f;
+    }
+}
+
+s32 MODEL_SCL_OFF_1(s32 arg0, f32 fparg0) {
+    f32 values[3];
+
+    if (SzEffect_IsModelStandby2(arg0) != 0) {
+        SzEffect_GetModelScale2(arg0, values);
+        subtract_00107450(&values[0], fparg0);
+        subtract_00107450(&values[1], fparg0);
+        subtract_00107450(&values[2], fparg0);
+        SzEffect_SetModelScale2(arg0, values);
+    }
+    return 0;
+}
+
+static inline void add_limited_00107510(f32 *value, f32 amount) {
+    *value += amount;
+    if (*value > 0.1) {
+        *value = 0.1f;
+    }
+}
+
+s32 CARD_SCL_ON_1(s32 arg0, f32 fparg0) {
+    f32 values[3];
+
+    if (SzEffect_IsCardStandby2(arg0) != 0) {
+        SzEffect_SetCardScale2(arg0, (s32)values);
+        add_limited_00107510(&values[0], fparg0);
+        add_limited_00107510(&values[1], fparg0);
+        add_limited_00107510(&values[2], fparg0);
+        SzEffect_SetCardScale2(arg0, (s32)values);
+    }
+    return 0;
+}
+
+s32 CARD_ON(s32 arg0, s32 arg1) {
+    u8 color[4];
+
+    if (SzEffect_IsCardStandby2(arg0) != 0) {
+        SzEffect_GetCardRgba2(arg0, color);
+        color[3] += arg1;
+        if (color[3] >= 0x80) {
+            color[3] = 0x80;
+        }
+        SzEffect_SetCardRgba2(arg0, (s32) color);
+        if (color[3] >= 0x80) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+s32 OBJ_RGB_IN(void *arg0, s8 arg1, s8 arg2, s8 arg3) {
+    ((s8 *)arg0)[0] = arg1;
+    ((s8 *)arg0)[1] = arg2;
+    ((s8 *)arg0)[2] = arg3;
+    return 0;
+}
+
+s32 OBJ_GsRGB_RGB_IN(u8 *arg0, u8 *arg1) {
+    arg0[0] = arg1[0];
+    arg0[1] = arg1[1];
+    arg0[2] = arg1[2];
+    arg0[3] = arg1[3];
+    return 0;
+}
+
+typedef struct {
+    f32 x;
+    f32 y;
+} FloatPair_00107740;
+
+typedef union {
+    struct {
+        u8 bytes[4];
+        f32 value;
+    } packed;
+    FloatPair_00107740 pair;
+} PackedPair_00107740;
+
+void OBJ_GsRGB_RGB_IN2(void *arg0, void *arg1) {
+    PackedPair_00107740 temp;
+    u8 *src = arg1;
+
+    temp.packed.bytes[0] = src[0];
+    temp.packed.bytes[1] = src[1];
+    temp.packed.bytes[2] = src[2];
+    temp.packed.bytes[3] = src[3];
+    temp.packed.value = 1.0f;
+    *(FloatPair_00107740 *)arg0 = temp.pair;
+}
+
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+    f32 q;
+} Rgbaq_00107790;
+
+typedef struct {
+    Rgbaq_00107790 rgbaq;
+    u64 st;
+    u64 xyz;
+} Vertex_00107790;
+
+typedef struct {
+    u8 tag[0x10];
+    Vertex_00107790 v[4];
+} Packet_00107790;
+
+static inline Rgbaq_00107790 rgbaq_00107790(u8 *color) {
+    Rgbaq_00107790 c;
+
+    c.r = color[0];
+    c.g = color[1];
+    c.b = color[2];
+    c.a = color[3];
+    c.q = 1.0f;
+    return c;
+}
+
+s32 GT4_IN_RGBA(void *arg0, u8 *arg1, s32 arg2) {
+    Packet_00107790 *packet = arg0;
+
+    if (arg2 == 0) {
+        packet->v[0].rgbaq = rgbaq_00107790(arg1);
+        packet->v[1].rgbaq = rgbaq_00107790(arg1);
+        packet->v[2].rgbaq = rgbaq_00107790(arg1);
+        packet->v[3].rgbaq = rgbaq_00107790(arg1);
+    } else if (arg2 == 1) {
+        packet->v[0].rgbaq = rgbaq_00107790(arg1);
+        packet->v[1].rgbaq = rgbaq_00107790(arg1);
+    } else if (arg2 == 2) {
+        packet->v[2].rgbaq = rgbaq_00107790(arg1);
+        packet->v[3].rgbaq = rgbaq_00107790(arg1);
+    }
+    return 0;
+}
+
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+    f32 q;
+} Rgbaq_00107990;
+
+typedef struct {
+    Rgbaq_00107990 rgbaq;
+    u64 xyz;
+} Vertex_00107990;
+
+typedef struct {
+    u8 tag[0x10];
+    Vertex_00107990 v[4];
+} Packet_00107990;
+
+static inline Rgbaq_00107990 rgbaq_00107990(u8 *color) {
+    Rgbaq_00107990 c;
+
+    c.r = color[0];
+    c.g = color[1];
+    c.b = color[2];
+    c.a = color[3];
+    c.q = 1.0f;
+    return c;
+}
+
+s32 G4_IN_RGBA(void *arg0, u8 *arg1, s32 arg2) {
+    Packet_00107990 *packet = arg0;
+
+    if (arg2 == 0) {
+        packet->v[0].rgbaq = rgbaq_00107990(arg1);
+        packet->v[1].rgbaq = rgbaq_00107990(arg1);
+        packet->v[2].rgbaq = rgbaq_00107990(arg1);
+        packet->v[3].rgbaq = rgbaq_00107990(arg1);
+    } else if (arg2 == 1) {
+        packet->v[0].rgbaq = rgbaq_00107990(arg1);
+        packet->v[1].rgbaq = rgbaq_00107990(arg1);
+    } else if (arg2 == 2) {
+        packet->v[2].rgbaq = rgbaq_00107990(arg1);
+        packet->v[3].rgbaq = rgbaq_00107990(arg1);
+    }
+    return 0;
+}
+
+void CARD_X_Z_IN_(f32 *arg0, f32 *arg1, void *arg2, void *arg3) {
+    f32 temp_f0;
+    f32 temp_f0_2;
+
+    *arg0 = ((f32 *)arg3)[0] - (((f32 *)arg2)[0] + ((f32 *)arg2)[4]);
+    *arg1 = ((f32 *)arg3)[2] - (((f32 *)arg2)[2] + ((f32 *)arg2)[6]);
+    temp_f0 = *arg0;
+    *arg0 = func_001a6c60(temp_f0 * temp_f0);
+    temp_f0_2 = *arg1;
+    *arg1 = func_001a6c60(temp_f0_2 * temp_f0_2);
+}
+
+void SIN_IN_PSYS(f32 *arg0) {
+    s16 i;
+    f32 *dst;
+
+    dst = arg0;
+    for (i = 0; i < 91; i++) {
+        *dst = func_001a6a88((3.1415927f * (f32)i) / 180.0f);
+        dst++;
+    }
+}
+
+void SIN_IN_PSYS2(void *arg0, s32 arg1, s32 arg2) {
+    s16 i;
+    s32 angle;
+    f32 *p;
+    f32 radians;
+
+    p = arg0;
+    i = 0;
+    angle = 0;
+    while (i < arg2) {
+        radians = (3.1415927f * (f32)angle) / 180.0f;
+        p[0] = func_001a6a88(radians);
+        p[20] = func_001a6898(radians);
+        radians = (3.1415927f * (f32)(arg1 + angle)) / 180.0f;
+        p[40] = func_001a6a88(radians);
+        p[60] = func_001a6898(radians);
+        angle += arg1;
+        p++;
+        i++;
+    }
+}
+
+s32 V0IN_V1_V2_XZ(void *arg0, void *arg1, void *arg2) {
+    f32 *dst = arg0;
+    f32 *src = arg1;
+    f32 *base = arg2;
+
+    dst[0] += src[0] - base[0];
+    dst[2] += src[2] - base[2];
+    dst[4] += src[0] - base[0];
+    dst[6] += src[2] - base[2];
+    return 0;
+}
+
+typedef struct Fields_00107E40 {
+    u8 padding[0xA0];
+    f32 value;
+    u8 padding_a4[4];
+    s16 first;
+    s16 second;
+} Fields_00107E40;
+
+s32 OBJ_RR2H_IN(f32 fparg0, f32 fparg1, f32 fparg2, void *arg0) {
+    Fields_00107E40 *fields = arg0;
+
+    fields->first = func_001a22c0(fparg0);
+    fields->second = func_001a22c0(fparg1);
+    fields->value = fparg2;
+    return 0;
+}
+
+s32 PSYS_RR2H_IN(void *arg0, f32 fparg0, f32 fparg1, f32 fparg2) {
+    *(f32 *)((u8 *)arg0 + 0x449C) = fparg0;
+    *(f32 *)((u8 *)arg0 + 0x44A0) = fparg1;
+    *(f32 *)((u8 *)arg0 + 0x44A4) = fparg2;
+    return 0;
+}
+
+s32 OBJ_GsRGB_RGB_IN_DATA(u8 *arg0, s32 arg1, s16 arg2) {
+    if (arg2 == 0) {
+        arg0[0] = 0xFF;
+        arg0[1] = 0xFF;
+        arg0[2] = 0xFF;
+    } else if (arg2 == 1) {
+        arg0[0] = 0xFF;
+        arg0[1] = 0;
+        arg0[2] = 0;
+    } else if (arg2 == 2) {
+        arg0[0] = 0;
+        arg0[1] = 0xFF;
+        arg0[2] = 0;
+    } else if (arg2 == 3) {
+        arg0[0] = 0;
+        arg0[1] = 0;
+        arg0[2] = 0xFF;
+    } else if (arg2 == 4) {
+        arg0[0] = 0xFF;
+        arg0[1] = 0xFF;
+        arg0[2] = 0;
+    } else if (arg2 == 5) {
+        arg0[0] = 0xFF;
+        arg0[1] = 0;
+        arg0[2] = 0xFF;
+    } else if (arg2 == 6) {
+        arg0[0] = 0;
+        arg0[1] = 0xFF;
+        arg0[2] = 0xFF;
+    } else if (arg2 == 7) {
+        arg0[0] = 0xFF;
+        arg0[1] = 0x80;
+        arg0[2] = 0xFF;
+    } else if (arg2 == 8) {
+        arg0[0] = 0x80;
+        arg0[1] = 0;
+        arg0[2] = 0xFF;
+    } else if (arg2 == 9) {
+        arg0[0] = 0xFF;
+        arg0[1] = 0x80;
+        arg0[2] = 0;
+    } else {
+        arg0[0] = 0xFF;
+        arg0[1] = 0xFF;
+        arg0[2] = 0xFF;
+    }
+    return 0;
+}
+
+f32 SIN_COS_INRAD(s32 arg0, s32 arg1, s32 arg2) {
+    f32 result;
+    f32 *table = (f32 *)arg0;
+
+    if (arg2 == 0) {
+        if ((s16)arg1 >= 360) {
+            arg1 = (s16)(arg1 % 360);
+        }
+        if ((s16)arg1 <= -360) {
+            arg1 = (s16)(arg1 % 360);
+        }
+        if ((s16)arg1 < 0) {
+            arg1 = (s16)(arg1 + 360);
+        }
+
+        if ((s16)arg1 < 90) {
+            table += (s16)arg1;
+            result = *table;
+        } else if ((s16)arg1 < 180) {
+            table += 90 - (s16)(arg1 - 90);
+            result = *table;
+        } else if ((s16)arg1 < 270) {
+            table += (s16)(arg1 - 180);
+            result = *table;
+            result *= -1.0f;
+        } else {
+            table += 90 - (s16)(arg1 - 270);
+            result = *table;
+            result *= -1.0f;
+        }
+    } else {
+        if ((s16)arg1 >= 360) {
+            arg1 = (s16)(arg1 % 360);
+        }
+        if ((s16)arg1 <= -360) {
+            arg1 = (s16)(arg1 % 360);
+        }
+        if ((s16)arg1 < 0) {
+            arg1 = (s16)(arg1 + 360);
+        }
+
+        if ((s16)arg1 < 90) {
+            table += 90 - (s16)arg1;
+            result = *table;
+        } else if ((s16)arg1 < 180) {
+            table += (s16)(arg1 - 90);
+            result = *table;
+            result *= -1.0f;
+        } else if ((s16)arg1 < 270) {
+            table += 90 - (s16)(arg1 - 180);
+            result = *table;
+            result *= -1.0f;
+        } else {
+            table += (s16)(arg1 - 270);
+            result = *table;
+        }
+    }
+
+    return result;
+}
+
+s32 tanD_360_(s64 x, s64 y) {
+    s64 ax;
+    s64 ay;
+
+    if (x == 0 && y == 0) {
+        return 0;
+    }
+    ax = abs(x);
+    ay = abs(y);
+    if (ax + ay == 0) {
+        return 0;
+    }
+    if (y >= 0) {
+        if (x > 0) {
+            if (ax == ay) {
+                return 45;
+            } else if (ay < ax) {
+                return func_001a0660(ay * 45, ax);
+            } else {
+                return 90 - func_001a0660(ax * 45, ay);
+            }
+        } else {
+            if (ax == ay) {
+                return 135;
+            } else if (ay < ax) {
+                return 180 - func_001a0660(ay * 45, ax);
+            } else {
+                return func_001a0660(ax * 45, ay) + 90;
+            }
+        }
+    } else {
+        if (x > 0) {
+            if (ax == ay) {
+                return 315;
+            } else if (ay < ax) {
+                return 360 - func_001a0660(ay * 45, ax);
+            } else {
+                return func_001a0660(ax * 45, ay) + 270;
+            }
+        } else {
+            if (ax == ay) {
+                return 225;
+            } else if (ay < ax) {
+                return func_001a0660(ay * 45, ax) + 180;
+            } else {
+                return 270 - func_001a0660(ax * 45, ay);
+            }
+        }
+    }
+}
+
+typedef struct UV_00108500 {
+    u64 u : 14;
+    u64 : 2;
+    u64 v : 14;
+    u64 : 34;
+} UV_00108500;
+
+typedef struct Rect_00108500 {
+    s16 x;
+    s16 y;
+    s16 width;
+    s16 height;
+} Rect_00108500;
+
+static inline s32 edge_uv_00108500(s32 extent, s32 origin) {
+    return (origin + extent) << 4;
+}
+
+void POLPAN_UVIN_(void *arg0, void *arg1, s32 arg2) {
+    Rect_00108500 *rect = arg1;
+
+    if (arg2 == 0) {
+        ((UV_00108500 *)((u8 *)arg0 + 0x18))->u = (rect->x << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x18))->v = (rect->y << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x30))->u = edge_uv_00108500(rect->width, rect->x);
+        ((UV_00108500 *)((u8 *)arg0 + 0x30))->v = (rect->y << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x48))->u = (rect->x << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x48))->v = edge_uv_00108500(rect->height, rect->y);
+        ((UV_00108500 *)((u8 *)arg0 + 0x60))->u = edge_uv_00108500(rect->width, rect->x);
+        ((UV_00108500 *)((u8 *)arg0 + 0x60))->v = edge_uv_00108500(rect->height, rect->y);
+    } else if (arg2 == 1) {
+        ((UV_00108500 *)((u8 *)arg0 + 0x18))->u = (rect->x << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x18))->v = edge_uv_00108500(rect->height, rect->y);
+        ((UV_00108500 *)((u8 *)arg0 + 0x30))->u = (rect->x << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x30))->v = (rect->y << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x48))->u = edge_uv_00108500(rect->width, rect->x);
+        ((UV_00108500 *)((u8 *)arg0 + 0x48))->v = edge_uv_00108500(rect->height, rect->y);
+        ((UV_00108500 *)((u8 *)arg0 + 0x60))->u = edge_uv_00108500(rect->width, rect->x);
+        ((UV_00108500 *)((u8 *)arg0 + 0x60))->v = (rect->y << 4);
+    } else if (arg2 == 10) {
+        ((UV_00108500 *)((u8 *)arg0 + 0x48))->u = (rect->x << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x48))->v = (rect->y << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x18))->u = edge_uv_00108500(rect->width, rect->x);
+        ((UV_00108500 *)((u8 *)arg0 + 0x18))->v = (rect->y << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x60))->u = (rect->x << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x60))->v = edge_uv_00108500(rect->height, rect->y);
+        ((UV_00108500 *)((u8 *)arg0 + 0x30))->u = edge_uv_00108500(rect->width, rect->x);
+        ((UV_00108500 *)((u8 *)arg0 + 0x30))->v = edge_uv_00108500(rect->height, rect->y);
+    } else {
+        ((UV_00108500 *)((u8 *)arg0 + 0x30))->u = (rect->x << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x30))->v = (rect->y << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x18))->u = edge_uv_00108500(rect->width, rect->x);
+        ((UV_00108500 *)((u8 *)arg0 + 0x18))->v = (rect->y << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x60))->u = (rect->x << 4);
+        ((UV_00108500 *)((u8 *)arg0 + 0x60))->v = edge_uv_00108500(rect->height, rect->y);
+        ((UV_00108500 *)((u8 *)arg0 + 0x48))->u = edge_uv_00108500(rect->width, rect->x);
+        ((UV_00108500 *)((u8 *)arg0 + 0x48))->v = edge_uv_00108500(rect->height, rect->y);
+    }
+}
+
+struct DotrPaintVector {
+    float x, y, z, w;
+};
+union DotrMatrixAngles {
+    struct DotrPaintVector f;
+    int i[4];
+};
+extern float func_00108030_b(int unit, short angle, int cosine);
+#define S_108950(a) func_00108030_b(unit, (a), 0)
+#define C_108950(a) func_00108030_b(unit, (a), 1)
+
+int MATRIX_XYZ_ININ33(void *row_v, void *v_v, int axis, int unit)
+{
+    struct DotrPaintVector * row = row_v;
+    struct DotrPaintVector * v = v_v;
+    union DotrMatrixAngles rot = *(union DotrMatrixAngles *)v;
+    struct DotrPaintVector out;
+    int a;
+
+    if (axis == 0) {
+        a = rot.i[1];
+        out.x = row->x * C_108950(a) + row->z * -S_108950(a);
+        out.y = row->y;
+        out.z = row->x * S_108950(a) + row->z * C_108950(a);
+        *row = out;
+    }
+    if (axis == 1) {
+        out.x = row->x;
+        out.y = row->y * C_108950(rot.i[0]) + row->z * S_108950(rot.i[0]);
+        out.z = row->y * -S_108950(rot.i[0]) + row->z * C_108950(rot.i[0]);
+        *row = out;
+    }
+    if (axis == 2) {
+        a = rot.i[2];
+        out.x = row->x * C_108950(a) + row->y * S_108950(a);
+        out.y = row->x * -S_108950(a) + row->y * C_108950(a);
+        out.z = row->z;
+        *row = out;
+    }
+    return 0;
+}
+#undef S_108950
+#undef C_108950
+
+typedef struct Vec4_00108BE0 {
+    f32 x, y, z, w;
+} Vec4_00108BE0;
+
+void RAD_XYZ_IN(void *arg0, void *arg1, s64 arg2, f32 arg3, f32 arg4) {
+    Vec4_00108BE0 input;
+    Vec4_00108BE0 output;
+
+    input = *(Vec4_00108BE0 *)arg1;
+    if (arg2 == 0) {
+        output.x = arg3 * input.x + -arg4 * input.z;
+        output.z = arg4 * input.x + arg3 * input.z;
+        output.y = input.y;
+    }
+    if ((s16)arg2 == 1) {
+        output.x = input.x;
+        output.y = arg4 * input.y + arg3 * input.z;
+        output.z = -arg3 * input.y + arg4 * input.z;
+    }
+    if ((s16)arg2 == 2) {
+        output.x = arg3 * input.x + arg4 * input.y;
+        output.y = -arg4 * input.x + arg3 * input.y;
+        output.z = input.z;
+    }
+    *(Vec4_00108BE0 *)arg0 = output;
+}
+
+typedef struct Vec4_00108CE0 {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+} Vec4_00108CE0;
+
+s32 PAINT_VECTOR_4TG_SET_IN(void *arg0, f32 fparg0, f32 fparg1) {
+    Vec4_00108CE0 *vertices = arg0;
+    f32 negative_x;
+    f32 negative_y;
+
+    negative_x = -fparg0;
+    vertices[0].x = negative_x;
+    vertices[0].y = fparg1;
+    vertices[0].z = 0.0f;
+    vertices[1].x = fparg0;
+    vertices[1].y = fparg1;
+    vertices[1].z = 0.0f;
+    vertices[2].x = negative_x;
+    negative_y = -fparg1;
+    vertices[2].y = negative_y;
+    vertices[2].z = 0.0f;
+    vertices[3].x = fparg0;
+    vertices[3].y = negative_y;
+    vertices[3].z = 0.0f;
+    return 0;
+}
+
+s32 PAINT_VECTOR_4TG_SET_IN2(void *dst, f32 x, f32 z) {
+    f32 (*vertices)[4] = dst;
+
+    vertices[0][0] = -x;
+    vertices[0][1] = 0.0f;
+    vertices[0][2] = z;
+    vertices[1][0] = x;
+    vertices[1][1] = 0.0f;
+    vertices[1][2] = z;
+    vertices[2][0] = -x;
+    vertices[2][1] = 0.0f;
+    vertices[2][2] = -z;
+    vertices[3][0] = x;
+    vertices[3][1] = 0.0f;
+    vertices[3][2] = -z;
+    return 0;
+}
+
+s32 PAINT_VECTOR_4TG_SET_INMAP4(void *arg0, s32 arg1, s32 arg2, s16 arg3) {
+    f32 x;
+    f32 y;
+    f32 *coords = arg0;
+
+    if (arg3 == 0) {
+        x = (f32) -(s16) arg1;
+        y = (f32) arg2;
+        coords[0] = x;
+        coords[1] = y;
+        coords[2] = 0.0f;
+        coords[4] = 0.0f;
+        coords[5] = y;
+        coords[6] = 0.0f;
+        coords[8] = x;
+        coords[9] = 0.0f;
+        coords[10] = 0.0f;
+        coords[12] = 0.0f;
+        coords[13] = 0.0f;
+        coords[14] = 0.0f;
+    } else if (arg3 == 1) {
+        x = (f32) arg1;
+        y = (f32) arg2;
+        coords[0] = x;
+        coords[1] = y;
+        coords[2] = 0.0f;
+        coords[4] = 0.0f;
+        coords[5] = y;
+        coords[6] = 0.0f;
+        coords[8] = x;
+        coords[9] = 0.0f;
+        coords[10] = 0.0f;
+        coords[12] = 0.0f;
+        coords[13] = 0.0f;
+        coords[14] = 0.0f;
+    } else if (arg3 == 2) {
+        x = (f32) -(s16) arg1;
+        coords[0] = x;
+        y = (f32) -(s16) arg2;
+        coords[1] = y;
+        coords[2] = 0.0f;
+        coords[4] = 0.0f;
+        coords[5] = y;
+        coords[6] = 0.0f;
+        coords[8] = x;
+        coords[9] = 0.0f;
+        coords[10] = 0.0f;
+        coords[12] = 0.0f;
+        coords[13] = 0.0f;
+        coords[14] = 0.0f;
+    } else if (arg3 == 3) {
+        x = (f32) arg1;
+        coords[0] = x;
+        y = (f32) -(s16) arg2;
+        coords[1] = y;
+        coords[2] = 0.0f;
+        coords[4] = 0.0f;
+        coords[5] = y;
+        coords[6] = 0.0f;
+        coords[8] = x;
+        coords[9] = 0.0f;
+        coords[10] = 0.0f;
+        coords[12] = 0.0f;
+        coords[13] = 0.0f;
+        coords[14] = 0.0f;
+    }
+    return 0;
+}
+
+typedef struct {
+    s32 data[16];
+} Matrix_00108EF0;
+
+void S_I_P_IN(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
+    extern void RhGeom_GetScaleRotXYZTransMatrix(void *, s32, s32, s32);
+    Matrix_00108EF0 sp50;
+    Matrix_00108EF0 sp90;
+
+    RhView_GetWorldScreenMatrix(&sp90);
+    RhGeom_GetScaleRotXYZTransMatrix(&sp50, arg1, arg2, arg3);
+    RhGeom_MulMatrix((s32) &sp90, &sp50);
+    *(Matrix_00108EF0 *)arg0 = sp90;
+}
+
+s32 PAINT_PIRM_G4(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    f32 result[4];
+
+    if (Ex3d_RotTransPersAuto(arg0, 0x70000000, arg2, arg1, result) != 0) {
+        ExSortPrim(arg1, arg3, func_001a23b0(result[0]));
+    }
+    return 0;
+}
+
+s32 PAINT_PIRM_GT4(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    f32 depth[4];
+
+    if (Ex3d_RotTransPersAuto(arg0, 0x70000000, arg2, arg1, depth) != 0) {
+        ExSortPrim(arg1, arg3, func_001a23b0(depth[0]));
+    }
+    return 0;
+}
+
+typedef struct Color_00109050 {
+    u64 low : 32;
+    u64 rgb : 24;
+    u64 high : 8;
+} Color_00109050;
+
+s32 PAINT_PIRM_LG2(s32 arg0, void *arg1, s32 arg2, s32 arg3) {
+    f32 result[4];
+
+    if (Ex3d_RotTransPersAuto(arg0, 0x70000000, arg2, (s32)arg1, result) != 0) {
+        ((Color_00109050 *)((u8 *)arg1 + 0x18))->rgb = 0xFFFFFF;
+        ((Color_00109050 *)((u8 *)arg1 + 0x28))->rgb = 0xFFFFFF;
+        ExSortPrim((s32)arg1, arg3, 0);
+    }
+    return 0;
+}
+
+typedef struct Vec4_00109100 {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+} Vec4_00109100;
+
+
+s32 MATRIX_XYZ_ININ_4(u8 *arg0, void *arg1, s32 arg2, s32 arg3) {
+    Vec4_00109100 sp40 = *(Vec4_00109100 *)arg1;
+
+    MATRIX_XYZ_ININ33(arg0, &sp40, arg2, arg3);
+    MATRIX_XYZ_ININ33(arg0 + 0x10, &sp40, arg2, arg3);
+    MATRIX_XYZ_ININ33(arg0 + 0x20, &sp40, arg2, arg3);
+    MATRIX_XYZ_ININ33(arg0 + 0x30, &sp40, arg2, arg3);
+    return 0;
+}
+
+s32 PAINT__2G_SET_IN(void *arg0, void *arg1, void *arg2) {
+    *(s16 *)((u8 *)arg0 + 2) = 0x11;
+    *(s16 *)arg0 = 4;
+    *(s64 *)((u8 *)arg0 + 8) = 0x4141;
+    *(s32 *)((u8 *)arg0 + 4) = 0;
+    ExAssignAlpha(arg0, 0x48 | ((s64)0x80 << 32));
+    ((u8 *)arg0)[0x10] = ((u8 *)arg1)[0];
+    ((u8 *)arg0)[0x11] = ((u8 *)arg1)[1];
+    ((u8 *)arg0)[0x12] = ((u8 *)arg1)[2];
+    ((u8 *)arg0)[0x13] = ((u8 *)arg1)[3];
+    ((u8 *)arg0)[0x20] = ((u8 *)arg2)[0];
+    ((u8 *)arg0)[0x21] = ((u8 *)arg2)[1];
+    ((u8 *)arg0)[0x22] = ((u8 *)arg2)[2];
+    ((u8 *)arg0)[0x23] = ((u8 *)arg2)[3];
+    *(s32 *)((u8 *)arg0 + 0x24) = 0x3F800000;
+    *(s32 *)((u8 *)arg0 + 0x14) = 0x3F800000;
+    ((u8 *)arg0)[0x1F] = 0;
+    ((u8 *)arg0)[0x2F] = 0;
+    return 0;
+}
+
+typedef struct Packet_00109270 {
+    s16 count;
+    u16 flags;
+    s32 reserved;
+    s64 registers;
+} Packet_00109270;
+
+s32 PAINT__GT4_SET_IN(void *arg0) {
+    Packet_00109270 *packet = arg0;
+
+    packet->flags = 0x34;
+    packet->count = 0xC;
+    packet->registers = 0x421421421421LL;
+    packet->reserved = 0;
+    packet->flags |= 0x800;
+    ExAssignAlpha(arg0, 0x8000000048LL);
+    return 0;
+}
+
+s32 PAINT__G4_SET_IN(void *arg0, s32 arg1) {
+    *(s16 *)((u8 *)arg0 + 2) = 0x14;
+    *(s16 *)arg0 = 8;
+    *(s64 *)((u8 *)arg0 + 8) = 0x41414141;
+    *(s32 *)((u8 *)arg0 + 4) = 0;
+    if (arg1 == 0) {
+        ExAssignAlpha(arg0, 0x48 | ((s64)0x80 << 32));
+    } else {
+        ExAssignAlpha(arg0, 0x42 | ((s64)0x80 << 32));
+    }
+    *(s32 *)((u8 *)arg0 + 0x44) = 0;
+    *(s32 *)((u8 *)arg0 + 0x34) = 0;
+    *(s32 *)((u8 *)arg0 + 0x24) = 0;
+    *(s32 *)((u8 *)arg0 + 0x14) = 0;
+    *(s8 *)((u8 *)arg0 + 0x1F) = 0;
+    *(s8 *)((u8 *)arg0 + 0x2F) = 0;
+    *(s8 *)((u8 *)arg0 + 0x3F) = 0;
+    *(s8 *)((u8 *)arg0 + 0x4F) = 0;
+    return 0;
+}
+
+typedef struct {
+    u64 command : 32;
+    u64 rgb : 24;
+    u64 alpha : 8;
+} Color_00109380;
+
+typedef struct {
+    Color_00109380 color;
+    u64 texture;
+    u64 position;
+} TexturedVertex_00109380;
+
+typedef struct {
+    Color_00109380 color;
+    u64 position;
+} Vertex_00109380;
+
+typedef struct {
+    u8 header[0x20];
+    TexturedVertex_00109380 vertices[4];
+} TexturedPacket_00109380;
+
+typedef struct {
+    u8 header[0x18];
+    Vertex_00109380 vertices[4];
+} Packet_00109380;
+
+s32 GT4_Xyz_ZIN(void *arg0, s32 arg1) {
+    if (arg1 == 0) {
+        TexturedPacket_00109380 *packet = (TexturedPacket_00109380 *)arg0;
+
+        packet->vertices[0].color.rgb =
+            packet->vertices[1].color.rgb =
+            packet->vertices[2].color.rgb =
+            packet->vertices[3].color.rgb = 0xFFFFFF;
+    } else {
+        Packet_00109380 *packet = (Packet_00109380 *)arg0;
+
+        packet->vertices[0].color.rgb =
+            packet->vertices[1].color.rgb =
+            packet->vertices[2].color.rgb =
+            packet->vertices[3].color.rgb = 0xFFFFFF;
+    }
+    return 0;
+}
+
+#endif /* __MWERKS__: compiler context (paused: GT4_BOX_IN__2DMAP's vertex type is defined here) */
+
+typedef struct {
+    u64 x : 16;
+    u64 y : 16;
+    u64 z : 24;
+    u64 fog : 8;
+} Xyzf_001094F0;
+
+#ifdef __MWERKS__ /* compiler context, continued */
+
+typedef struct {
+    u64 color;
+    Xyzf_001094F0 xyzf;
+} Vertex_001094F0;
+
+typedef struct {
+    u8 header[0x10];
+    Vertex_001094F0 v[4];
+} Packet_001094F0;
+
+s32 G4_BOX_IN__(void *arg0) {
+    s32 h;
+    s32 w;
+    Packet_001094F0 *p = arg0;
+
+    w = 320;
+    h = 240;
+    *(s32 *)((u8 *)arg0 + 0x44) = 0;
+    *(s32 *)((u8 *)arg0 + 0x34) = 0;
+    *(s32 *)((u8 *)arg0 + 0x24) = 0;
+    *(s32 *)((u8 *)arg0 + 0x14) = 0;
+    p->v[0].xyzf.x = (0x800 - w) << 4;
+    p->v[0].xyzf.y = (0x800 - h) << 4;
+    p->v[0].xyzf.z = 0xFFFFFF;
+    p->v[0].xyzf.fog = 0;
+    p->v[1].xyzf.x = (0x800 + w) << 4;
+    p->v[1].xyzf.y = (0x800 - h) << 4;
+    p->v[1].xyzf.z = 0xFFFFFF;
+    p->v[1].xyzf.fog = 0;
+    p->v[2].xyzf.x = (0x800 - w) << 4;
+    p->v[2].xyzf.y = (0x800 + h) << 4;
+    p->v[2].xyzf.z = 0xFFFFFF;
+    p->v[2].xyzf.fog = 0;
+    p->v[3].xyzf.x = (0x800 + w) << 4;
+    p->v[3].xyzf.y = (0x800 + h) << 4;
+    p->v[3].xyzf.z = 0xFFFFFF;
+    p->v[3].xyzf.fog = 0;
+    return 0;
+}
+
+#endif /* __MWERKS__: compiler context */
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+} Vec4_001095D0;
+
+typedef struct {
+    u64 color;
+    u64 uv;
+    Xyzf_001094F0 xyzf;
+} Vertex_001095D0;
+
+typedef struct {
+    u8 header[0x10];
+    Vertex_001095D0 v[4];
+} Packet_001095D0;
+
+s32 GT4_BOX_IN__2DMAP(void *arg0, void *arg1, void *arg2) {
+    Vec4_001095D0 size;
+    Vec4_001095D0 pos;
+    s32 h;
+    s32 w;
+    u16 x0;
+    u16 y0;
+    u16 x1;
+    u16 y1;
+    Packet_001095D0 *p = arg0;
+
+    size = *(Vec4_001095D0 *)arg1;
+    pos = *(Vec4_001095D0 *)arg2;
+    h = (s32)(size.y / 2.0f);
+    w = (s32)(size.x / 2.0f);
+    p->v[0].xyzf.x = x0 = ((0x800 - w) + (u16)(s32)pos.x) << 4;
+    p->v[0].xyzf.y = y0 = ((0x800 - h) + (u16)(s32)pos.y) << 4;
+    p->v[0].xyzf.z = 0xFFFFFF;
+    p->v[0].xyzf.fog = 0;
+    p->v[1].xyzf.x = x1 = ((0x800 + w) + (u16)(s32)pos.x) << 4;
+    p->v[1].xyzf.y = y0;
+    p->v[1].xyzf.z = 0xFFFFFF;
+    p->v[1].xyzf.fog = 0;
+    p->v[2].xyzf.x = x0;
+    p->v[2].xyzf.y = y1 = ((0x800 + h) + (u16)(s32)pos.y) << 4;
+    p->v[2].xyzf.z = 0xFFFFFF;
+    p->v[2].xyzf.fog = 0;
+    p->v[3].xyzf.x = x1;
+    p->v[3].xyzf.y = y1;
+    p->v[3].xyzf.z = 0xFFFFFF;
+    p->v[3].xyzf.fog = 0;
+    return 0;
+}

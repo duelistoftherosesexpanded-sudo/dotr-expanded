@@ -1,0 +1,58 @@
+#include "dotr/ee/driver_near.h"
+
+#define MIN(a, b) ((b) < (a) ? (b) : (a))
+#define MAX(a, b) ((a) < (b) ? (b) : (a))
+#define ID(w) (w) >> 8, (w) & 0xFF
+
+/* v1, v2, Dist, Loc and i are the Japanese build's local names; bMin, wUnit, wLoc and p are not in
+ * its debug information and are named here. */
+int TaLogic_GetNearUnitL3(struct jp_9a533 *pVarInfo, int nX, int nZ, struct jp_9b50e *nUnitLst, unsigned char bChase, int sKey, unsigned char fOpen, unsigned char fDef, unsigned char fView, int bWarnLvl, unsigned short wUnitNum)
+{
+    int i;
+    int Loc;
+    int Dist;
+    int v1;
+    int v2;
+    unsigned char bMin;
+    unsigned short wUnit;
+    unsigned short wLoc;
+    struct jp_9b50e *p;
+
+    p = nUnitLst;
+    bMin = 7;
+    wUnit = 0xFFFF;
+    wLoc = wUnit;
+    for (i = 0; i < wUnitNum; i++) {
+        if (SzDuel_GetUnit(ID(p->nUnitID)) != 0) {
+            Loc = SzDuel_GetUnitLoc(ID(p->nUnitID));
+            if ((MAX(Loc & 0xFF, nX) - MIN(Loc & 0xFF, nX)) + (MAX(Loc >> 8, nZ) - MIN(Loc >> 8, nZ)) <= bChase
+                && TaLogic_IsStatusMatch(SzDuel_GetUnitStatus(ID(p->nUnitID), 2), fOpen) == 1
+                && TaLogic_IsStatusMatch(SzDuel_GetUnitStatus(ID(p->nUnitID), 5), fDef) == 1
+                && TaLogic_IsUnitCategory(ID(p->nUnitID), sKey) == 1) {
+                Dist = p->bDist;
+                if (Dist <= bChase && Dist > 0) {
+                    if (Dist < bMin) {
+                        bMin = (MAX(Loc & 0xFF, nX) - MIN(Loc & 0xFF, nX)) + (MAX(Loc >> 8, nZ) - MIN(Loc >> 8, nZ));
+                        wUnit = p->nUnitID;
+                        wLoc = Loc;
+                        bChase = Dist;
+                    } else if (Dist == bMin) {
+                        v1 = TaLogic_IsUnitWin4(pVarInfo, p->nUnitID, bWarnLvl, Loc & 0xFF, Loc >> 8, fView);
+                        v2 = TaLogic_IsUnitWin4(pVarInfo, wUnit, bWarnLvl, wLoc & 0xFF, wLoc >> 8, fView);
+                        if ((v1 > 0 && v2 > 0 && v1 > v2) || (v1 > 0 && v2 <= 0)) {
+                        wUnit = p->nUnitID;
+                        bMin = (MAX(Loc & 0xFF, nX) - MIN(Loc & 0xFF, nX)) + (MAX(Loc >> 8, nZ) - MIN(Loc >> 8, nZ));
+                        wLoc = Loc;
+                        bChase = Dist;
+                        }
+                    }
+                }
+            }
+        }
+        p++;
+    }
+    if (wUnit == 0xFFFF) {
+        return -1;
+    }
+    return wUnit;
+}

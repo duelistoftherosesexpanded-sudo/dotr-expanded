@@ -1,0 +1,22 @@
+[
+  {
+    "card": 878,
+    "effects": {
+      "movement": [
+        {
+          "copy": 128,
+          "slot": "movement"
+        },
+        {
+          "copy": 144,
+          "slot": "movement"
+        },
+        {
+          "copy": 679,
+          "slot": "movement"
+        }
+      ],
+      "flip": "none"
+    }
+  }
+]

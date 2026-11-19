@@ -1,0 +1,54 @@
+/baserom/*
+!/baserom/README
+!/baserom/README.md
+/build/
+/out/
+/.venv/
+/.tooling
+/core
+/core.*
+__pycache__/
+*.py[cod]
+*.iso
+*.bin
+*.elf
+*.irx
+*.mrg
+*.o
+*.a
+.DS_Store
+/.idea/
+/.vscode/
+/.claude/
+/launcher/
+
+# Duelists of the Roses Expanded: nothing taken from a game or a card goes in the repository.
+# Players' setup tool rebuilds all of it from their own discs (tools/release.py, setup_tool.py).
+/release/
+/release-work/
+/dist/
+/models/
+/cross duel/
+/saikyo/
+/picture frames/
+/animations/
+/dotr-dlc-models/
+/dotr-dod-models/
+/falsebound/
+/frontlines/
+/mods/widescreen/art/
+/mods/widescreen/models/
+/mods/widescreen/textures/
+/mods/widescreen/sleeves/
+/mods/widescreen/shop/
+/mods/*/my-dlc/
+*.cia
+*.cci
+*.3ds
+*.apk
+*.rvz
+*.glb
+*.fbx
+*.dat
+*.exe
+/tools/fbk_hsd_render.py

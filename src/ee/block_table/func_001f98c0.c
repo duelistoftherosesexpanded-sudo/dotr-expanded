@@ -1,0 +1,17 @@
+#include "dotr/ee/block_table.h"
+
+int SzView_InqPointLight(int index, int k)
+{
+    struct DotrBlock *p;
+    if (index < 0 || index >= 1) {
+        return 0;
+    }
+    p = gSzView_hView_blocks[index];
+    if (p == 0) {
+        return 0;
+    }
+    if (k < 0 || k >= 10) {
+        return 0;
+    }
+    return (p->lightingFlags & (1 << k)) ? 1 : 0;
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "target": "ntsc-u",
+  "serial": "SLUS_205.15",
+  "sector_size": 2048,
+  "image_size": 2112782336,
+  "image_md5": "ca838dae26ff750936c0814d1c2d33f1",
+  "boot_path": "SLUS_205.15",
+  "elf_machine": 8,
+  "elf_entry": 1048584,
+  "provenance": "identity of the unmodified USA disc; make verify and make prepare check your image against it"
+}

@@ -1,0 +1,115 @@
+# SzEffect: effects
+
+111 functions, 15,252 bytes, all byte-matching. Names are the Japanese build's symbols where it has one ([topics/jp-build-symbols.md](../topics/jp-build-symbols.md)); `func_<address>` where it has none. Descriptions are readings of the C; field and parameter meanings are interpretations unless [GAME_DATA.md](../GAME_DATA.md) records evidence. The module's place in the program: [ARCHITECTURE.md](../ARCHITECTURE.md).
+
+- **`SzEffect_Init`** `0x1f3700`, 144 bytes: Counts the entries of each of the three effect-function lists in `gSzEffect_aEffFuncTbl` (`0x292ff0`, each zero-terminated) into the list's count word, zero-fills the 852-byte effect pool at `0x31bb50` (`gSzEffect_el`), calls `SzEffect_Clear` and sets the monster, duel and battle black-out levels to 128.
+- **`SzEffect_Clear`** `0x1f3790`, 216 bytes: Marks the 24 effect entries at pool `+0x100` free, marks the 32 eight-byte module slots at `+0` empty and frees (`SzMem_Free`) any data block a slot holds, then stores 0 at `+0x348` and `+0x34c` and −1 in the words at `+0x340`/`+0x344` that record which module is in the overlay window.
+- **`SzEffect_TrimModule`** `0x1f3870`, 160 bytes: Moves every ready module slot (state 2) that no effect entry is using (`SzEffect_IsUse2` answers 0 for its type and id) to the kept state 3, which makes it reusable.
+- **`SzEffect_LoadModule`** `0x1f3910`, 924 bytes: Answers the module slot for (type, id). A slot already holding it is answered at once (a kept slot, state 3, goes back to ready, state 2). Otherwise it takes the first empty slot or, with none empty, the first kept slot counting from a rotating start byte (`0x31bea8`) that then advances by one; with neither it answers 0. For the slot found it frees the old block, refuses when the third argument is set or the id is outside 0–853, builds the file name "%s/Merge/%cModule.Mrg" from `SzFile_GetEnv("HOME")` and C, B or M for type 0, 1 or 2 (any other type answers 0), and queues a 32 KiB read (`SzFile_ReadRequestParam`, callback `lSzEffect_LoadOverlayCB`) into the window `0x1ee0000 + slot * 0x8000` from file position number × 0x8000, where the number is the id for type 0 and `SzDuel_Xax2New(id)` for types 1 and 2, which must then be below 683. On a queued read the slot records type and id and goes to state 1 (loading).
+- **`lSzEffect_LoadOverlayCB`** `0x1f3cb0`, 388 bytes: Read callback for a module slot (index in the request's word `+0x1c`). A completed read is rejected when the loaded data does not begin with the three-character tag at `0x2cfbcb` (`strncmp`; the data is freed when the request's flag at `+0xc` is set) or the slot is no longer loading; a rejected or failed read empties the slot. Otherwise the loaded size is stored at slot `+2` and, for type 0, a second 2048-byte read from position id × 2048 of a second file (name format at `0x2cfbcf`) is queued with callback `lSzEffect_LoadSECtlCB`; for other types, or when that request cannot be queued, the slot goes to state 3.
+- **`lSzEffect_LoadSECtlCB`** `0x1f3e40`, 84 bytes: Read callback for the second (sound-control, going by the name) file of a type-0 module: moves the slot from state 1 to 3 and, when the read completed, stores the request's data pointer (word `+0x14`) at slot `+4`.
+- **`SzEffect_GetModuleInfo`** `0x1f3ea0`, 128 bytes: Answers the first of the 32 module slots whose type matches the first argument and whose id matches the second (either ignored when negative), or 0 when none does.
+- **`SzEffect_ReqSE`** `0x1f3f20`, 428 bytes: Plays the sound cues of running type-0 effects: for each running entry it finds the ready module slot with the same type and id and, when that slot has cue data, walks up to 64 four-byte cue records (ending at tag 15) and calls `SzSound_PlaySE(1, value)` for each cue whose time falls in the window from the entry's frame counter minus `SzGame_GetFrameSpeed()` up to the counter. The cue record layout is a reading of this function alone.
+- **`SzEffect_Draw`** `0x1f40d0`, 2080 bytes: Runs every running (state 1) effect entry of the given type (all when negative) between `RhGeom_PushMatrix` and `RhGeom_PopMatrix`: resolves the module (the unit model's B or M overlay for type 1 or 2, else the ready module slot), copies it into the overlay window at `0x1e00000` unless it is already there, sets the effect target and source, calls the effect function with its work address and −1 (−2 when sleeping, −3 when being erased), stores the answer at `+0x10` and advances the frame counter. For type 1 the answer also drives the source unit's model: camera requests for answers 3, 4 and 8 (once per entry, lasting at least 30 frames), the stone flag, animation interrupts, and an occasional two-frame step back between frames 11 and 16. An answer of 8 destroys the entry, or puts a sleeping entry in state 2.
+- **`SzEffect_Entry`** `0x1f48f0`, 12 bytes: `SzEffect_EntryCallback` with no completion callback.
+- **`SzEffect_EntryCallback`** `0x1f4900`, 932 bytes: Starts an effect: checks `moduleType` (0–2) and `id` against that type's list count, refuses a second type-1 effect while one is in use, takes the module from the source unit's B/M model overlay (types 1 and 2) or from `SzEffect_LoadModule`, copies it into the overlay window unless it is already there, calls the effect function once with its work address and the argument, then fills the first free entry (type, id, argument, target and source cells, cleared flags and counter, callback and its argument) and answers its index; −1 on any refusal, or when the first call answers 8 (the entry is destroyed at once).
+- **`SzEffect_Destroy`** `0x1f4cb0`, 408 bytes: Ends effect entry `index` (0 when outside 0–23): for types 1 and 2 clears the model reference ids it set on the source and target cells (`SzEffect_ClearRefID2`), frees the entry, calls its completion callback with the stored argument, and moves its module slot from ready to kept when no other entry uses that module; answers 1.
+- **`SzEffect_Destroy2`** `0x1f4e50`, 180 bytes: Destroys every effect entry whose type equals the first argument and whose id equals the second (either ignored when negative) and answers the OR of the `SzEffect_Destroy` results.
+- **`SzEffect_Sleep`** `0x1f4f10`, 192 bytes: Sets or clears the sleep flag (bit 13 of the entry's halfword `+2`) of effect entry `index`: with the flag set only a running entry (state 1) qualifies; with it clear only a stopped entry (state 2) qualifies and is returned to running. Answers 1 when it acted, 0 otherwise (including an index outside 0–23 or a free entry).
+- **`SzEffect_Sleep2`** `0x1f4fd0`, 192 bytes: `SzEffect_Sleep(i, flag)` for every entry whose type and id match the first two arguments (either ignored when negative); answers the OR.
+- **`SzEffect_Erase2`** `0x1f5090`, 308 bytes: For every entry whose type and id match (either ignored when negative), destroys it when stopped (state 2) or sets its erase flag (bit 14 of halfword `+2`) when running, so that the effect function is next called with −3; answers the OR (1 for each running entry flagged).
+- **`SzEffect_IsUse`** `0x1f51d0`, 104 bytes: 1 when effect entry `index` is running, 2 when it is stopped, 0 when free or the index is outside 0–23.
+- **`SzEffect_IsUse2`** `0x1f5240`, 144 bytes: The OR of the `SzEffect_IsUse` result over every entry whose type and id match the arguments (either ignored when negative).
+- **`SzEffect_GetStatus`** `0x1f52d0`, 68 bytes: The last answer of effect entry `index`'s function (word `+0x10`), or −1 for an index outside 0–23.
+- **`SzEffect_GetCount`** `0x1f5320`, 72 bytes: The frame counter of effect entry `effectIndex` (bits 3–15 of its first halfword), or −1 for an index outside 0–23.
+- **`SzEffect_SetTarget`** `0x1f5370`, 12 bytes: Stores the effect's target cell (row << 8 | column) in the word at `0x31be98`.
+- **`SzEffect_GetTarget`** `0x1f5380`, 12 bytes: Answers the target cell stored at `0x31be98`.
+- **`SzEffect_SetFrom`** `0x1f5390`, 12 bytes: Stores the effect's source cell in the word at `0x31be9c`.
+- **`SzEffect_GetFrom`** `0x1f53a0`, 12 bytes: Answers the source cell stored at `0x31be9c`.
+- **`SzEffect_GetPos`** `0x1f53b0`, 16 bytes: `SzEffect_GetPos2(kind, target cell, out)`.
+- **`SzEffect_GetPos2`** `0x1f53c0`, 276 bytes: Presets `out` to (0, 0, 0, 1); for a cell inside the 3 × 11 grid that has a unit model, writes by `posType` the card's position (`SzDuel_GetCardPos`, `posType` 0), the model's centre (`SzModel_GetCenter`, `posType` 1) or the position of model 8 (`posType` 2) and answers that call's result; 0 otherwise.
+- **`SzEffect_GetRefNum2`** `0x1f54e0`, 116 bytes: The reference count (`SzModel_GetRefNum`) of the unit model at the cell; −1 when the cell is outside the 3 × 11 grid or has no model.
+- **`SzEffect_SetRefID2`** `0x1f5560`, 188 bytes: `SzModel_SetRefID` on the cell's unit model; a non-negative value is first combined with the low seven bits of the pool word at `+0x340` (the type of the module in the overlay window) as `type << 8 | value & 0xff`. −1 when the cell is outside the grid or has no model.
+- **`SzEffect_GetRef2`** `0x1f5620`, 164 bytes: Presets the vector to (0, 0, 0, 1) and answers `SzModel_GetRef(model, value, vector)` for the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_ClearRefID2`** `0x1f56d0`, 220 bytes: For the cell's unit model, sets to −1 (`SzModel_SetRefID_RefNo`) each of its eight reference ids that is in 0–7 and whose bits 8–14 equal the given type; answers 1, or 0 when the cell is outside the grid or has no model. As written, the 0–7 range test means only type 0 can ever match.
+- **`SzEffect_SetMaxOT`** `0x1f57b0`, 16 bytes: `SzEffect_SetMaxOT2(source cell, value)`.
+- **`SzEffect_SetMaxOT2`** `0x1f57c0`, 132 bytes: `SzModel_SetMaxOT` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetRadius`** `0x1f5850`, 12 bytes: `SzEffect_GetRadius2(target cell)`.
+- **`SzEffect_GetRadius2`** `0x1f5860`, 120 bytes: The radius (`SzModel_GetRadius`) of the cell's unit model; 0.0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetCamDist2`** `0x1f58e0`, 132 bytes: The camera distance for the monster shown by the cell's unit model, `SzDuel_GetCamDist(SzDuel_Xax2New(SzModel_GetModelNo(model)))`; −1 when the cell is outside the grid or has no model.
+- **`SzEffect_SetBusyFlag2`** `0x1f5970`, 92 bytes: `SzDuel_SetBusyFlag(row, column, flag)` for a cell inside the 3 × 11 grid; 0 otherwise.
+- **`SzEffect_SetCardBusyFlag2`** `0x1f59d0`, 92 bytes: `SzDuel_SetCardBusyFlag(row, column, flag)` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_SetCardColBusyFlag2`** `0x1f5a30`, 92 bytes: `SzDuel_SetCardColBusyFlag(row, column, flag)` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_SetModelBusyFlag2`** `0x1f5a90`, 92 bytes: `SzDuel_SetModelBusyFlag(row, column, flag)` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_IsCardStandby2`** `0x1f5af0`, 64 bytes: 1 when the cell's unit (`SzDuel_GetUnit`) exists and has a card request (word `+4`), else 0.
+- **`SzEffect_GetCardRequest2`** `0x1f5b30`, 60 bytes: The card request (word `+4`) of the cell's unit, or 0 when there is no unit.
+- **`SzEffect_SetCardPos2`** `0x1f5b70`, 92 bytes: `SzDuel_SetCardPos(row, column, vector)` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_GetCardPos2`** `0x1f5bd0`, 112 bytes: Presets the vector to (0, 0, 0, 1), then `SzDuel_GetCardPos` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_SetCardRot2`** `0x1f5c40`, 92 bytes: `SzDuel_SetCardRot` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_GetCardRot2`** `0x1f5ca0`, 108 bytes: Presets the vector to zeros, then `SzDuel_GetCardRot` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_SetCardScale2`** `0x1f5d10`, 92 bytes: `SzDuel_SetCardScale` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_GetCardScale2`** `0x1f5d70`, 112 bytes: Presets the vector to (0, 0, 0, 1), then `SzDuel_GetCardScale` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_SetCardRgba2`** `0x1f5de0`, 92 bytes: `SzDuel_SetCardRgba(row, column, colour)` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_GetCardRgba2`** `0x1f5e40`, 112 bytes: Presets the four colour bytes to 128, then `SzDuel_GetCardRgba` for a cell inside the grid; 0 otherwise.
+- **`SzEffect_IsModelStandby`** `0x1f5eb0`, 12 bytes: `SzEffect_IsModelStandby2(target cell)`.
+- **`SzEffect_IsModelStandby2`** `0x1f5ec0`, 64 bytes: Whether the cell's unit has its model displayed (`SzModel_IsModelDisp` on the unit's model id at `+0x46`); 0 when there is no unit.
+- **`SzEffect_SetModelPos2`** `0x1f5f00`, 132 bytes: `SzModel_SetPos` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetModelPos2`** `0x1f5f90`, 152 bytes: Presets the vector to (0, 0, 0, 1), then `SzModel_GetPos` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetModelRot2`** `0x1f6030`, 132 bytes: `SzModel_SetRot` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetModelRotC`** `0x1f60c0`, 16 bytes: `SzEffect_SetModelRotC2(target cell, vector)`.
+- **`SzEffect_SetModelRotC2`** `0x1f60d0`, 132 bytes: `SzModel_SetRotC` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetModelRot2`** `0x1f6160`, 148 bytes: Presets the vector to zeros, then `SzModel_GetRot` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetModelRotC`** `0x1f6200`, 16 bytes: `SzEffect_GetModelRotC2(target cell, vector)`.
+- **`SzEffect_GetModelRotC2`** `0x1f6210`, 148 bytes: Presets the vector to zeros, then `SzModel_GetRotC` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetModelScale2`** `0x1f62b0`, 132 bytes: `SzModel_SetScale` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetModelScale2`** `0x1f6340`, 152 bytes: Presets the vector to (0, 0, 0, 1), then `SzModel_GetScale` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetModelRgba2`** `0x1f63e0`, 12 bytes: `SzEffect_SetModelRgbaX(cell, -1, colour)`.
+- **`SzEffect_SetModelRgbaX`** `0x1f63f0`, 144 bytes: `SzModel_SetRgba(model, value, colour)` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetModelRgba`** `0x1f6480`, 16 bytes: `SzEffect_GetModelRgba2(target cell, colour)`.
+- **`SzEffect_GetModelRgba2`** `0x1f6490`, 48 bytes: 1 when `SzEffect_GetModelRgbaX` answers a non-negative value, else 0.
+- **`SzEffect_GetModelRgbaX`** `0x1f64c0`, 152 bytes: Presets the four colour bytes to 128, then `SzModel_GetRgba` on the cell's unit model; −1 when the cell is outside the grid or has no model.
+- **`SzEffect_SetModelFilter`** `0x1f6560`, 20 bytes: `SzEffect_SetModelFilterX(target cell, -1, colour)`.
+- **`SzEffect_SetModelFilter2`** `0x1f6580`, 12 bytes: `SzEffect_SetModelFilterX(cell, -1, colour)`.
+- **`SzEffect_SetModelFilterX`** `0x1f6590`, 144 bytes: `SzModel_SetFilter(model, value, colour)` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetAnim2`** `0x1f6620`, 116 bytes: The current animation (`SzModel_GetAnim`) of the cell's unit model; −1 when the cell is outside the grid or has no model.
+- **`SzEffect_SetAnimIntr2`** `0x1f66a0`, 132 bytes: `SzModel_SetAnimIntr` (interrupt with another animation) on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetAnimDir2`** `0x1f6730`, 132 bytes: `SzModel_SetAnimDir` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_GetAnimFrame2`** `0x1f67c0`, 120 bytes: The animation frame (`SzModel_GetAnimFrame`) of the cell's unit model; 0.0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetAnimFrame2`** `0x1f6840`, 132 bytes: `SzModel_SetAnimFrame` with a float frame on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetFogColorForMonster`** `0x1f68d0`, 64 bytes: `SzView_SetFogColor(0, entry, fogColour)` for fog entries 4 and 5.
+- **`SzEffect_SetFogColorForDuel`** `0x1f6910`, 80 bytes: `SzView_SetFogColor(0, entry, value)` for fog entries 0, 1 and 8.
+- **`SzEffect_SetFogColorForBattle`** `0x1f6960`, 64 bytes: `SzView_SetFogColor(0, entry, value)` for fog entries 2 and 3.
+- **`SzEffect_SetFogParamZForMonster`** `0x1f69a0`, 64 bytes: `SzView_SetFogParamZ(0, entry, value)` for fog entries 4 and 5.
+- **`SzEffect_SetFogParamZForDuel`** `0x1f69e0`, 80 bytes: `SzView_SetFogParamZ(0, entry, value)` for fog entries 0, 1 and 8.
+- **`SzEffect_SetFogParamZForBattle`** `0x1f6a30`, 64 bytes: `SzView_SetFogParamZ(0, entry, value)` for fog entries 2 and 3.
+- **`SzEffect_SetFogParamYForMonster`** `0x1f6a70`, 64 bytes: `SzView_SetFogParamY(0, entry, value)` for fog entries 4 and 5.
+- **`SzEffect_SetFogParamYForDuel`** `0x1f6ab0`, 80 bytes: `SzView_SetFogParamY(0, entry, value)` for fog entries 0, 1 and 8.
+- **`SzEffect_SetFogParamYForBattle`** `0x1f6b00`, 64 bytes: `SzView_SetFogParamY(0, entry, value)` for fog entries 2 and 3.
+- **`SzEffect_SetStraightLightForMonster`** `0x1f6b40`, 64 bytes: `SzView_SetStraightLight(0, set, pointLightParameters)` for straight-light sets 4 and 5.
+- **`SzEffect_SetStraightLightForDuel`** `0x1f6b80`, 80 bytes: `SzView_SetStraightLight(0, set, value)` for straight-light sets 0, 1 and 8.
+- **`SzEffect_SetStraightLightForBattle`** `0x1f6bd0`, 64 bytes: `SzView_SetStraightLight(0, set, pointLightParameters)` for straight-light sets 2 and 3.
+- **`SzEffect_SetPointLightForMonster`** `0x1f6c10`, 64 bytes: `SzView_SetPointLight(0, light, pointLightParameters)` for point lights 4 and 5.
+- **`SzEffect_SetPointLightForDuel`** `0x1f6c50`, 80 bytes: `SzView_SetPointLight(0, light, pointLightParameters)` for point lights 0, 1 and 8.
+- **`SzEffect_SetPointLightForBattle`** `0x1f6ca0`, 64 bytes: `SzView_SetPointLight(0, light, pointLightParameters)` for point lights 2 and 3.
+- **`SzEffect_SetBlackOutForMonster`** `0x1f6ce0`, 12 bytes: Stores the monster black-out level (word 0 of `0x31bea0`).
+- **`SzEffect_SetBlackOutForDuel`** `0x1f6cf0`, 12 bytes: Stores the duel black-out level (word 1 of `0x31bea0`).
+- **`SzEffect_SetBlackOutForBattle`** `0x1f6d00`, 12 bytes: Stores the battle black-out level (word 2 of `0x31bea0`).
+- **`SzEffect_GetBlackOutForMonster`** `0x1f6d10`, 12 bytes: Answers the monster black-out level.
+- **`SzEffect_GetBlackOutForDuel`** `0x1f6d20`, 12 bytes: Answers the duel black-out level.
+- **`SzEffect_GetBlackOutForBattle`** `0x1f6d30`, 12 bytes: Answers the battle black-out level.
+- **`SzEffect_SetIntensityForMonster`** `0x1f6d40`, 56 bytes: `SzEffect_SetIntensity` for model types 4 and 5 with the argument.
+- **`SzEffect_SetIntensityForDuel`** `0x1f6d80`, 68 bytes: `SzEffect_SetIntensity` for model types 0, 1 and 8 with the argument.
+- **`SzEffect_SetIntensityForBattle`** `0x1f6dd0`, 56 bytes: `SzEffect_SetIntensity` for model types 2 and 3 with the argument.
+- **`SzEffect_SetIntensity`** `0x1f6e10`, 112 bytes: `SzModel_SetIntensity(i, vector)` for each of the 84 models whose type (`SzModel_GetModelType`) equals `targetModelType`, or all of them when `targetModelType` is negative.
+- **`SzEffect_SetIntensityOnly`** `0x1f6e80`, 112 bytes: `SzModel_SetIntensityOnly(i, value)` with a float value for each of the 84 models of type `kind` (all when negative).
+- **`SzEffect_InqDuelResult`** `0x1f6ef0`, 92 bytes: 1 when `SzEffect_GetPlayMotion` answers 4, called with 0 when the source cell equals `SzBattle_InqEntry(0)` and with 1 otherwise; else 0.
+- **`SzEffect_GetPlayMotion`** `0x1f6f50`, 264 bytes: Answers `SzDuel_GetPlayMotion(source row, source column, target row, target column, p, q, a)`, where p and q are the bytes at `+0x42`/`+0x43` of the unit at the cell `SzBattle_InqEntry(1)` when bit 6 of its byte `+0x57` is set and `+0x40`/`+0x41` otherwise; −1 when there is no such unit or either cell is outside the grid.
+- **`SzEffect_ModelShotTexture2`** `0x1f7060`, 12 bytes: `SzEffect_ModelShotTextureWithFunc2(cell, a, b, c, 0, 0)`.
+- **`SzEffect_ModelShotTextureWithFunc`** `0x1f7070`, 44 bytes: `SzEffect_ModelShotTextureWithFunc2` on the source cell with its five arguments.
+- **`SzEffect_ModelShotTextureWithFunc2`** `0x1f70a0`, 196 bytes: `SzModel_ShotTextureWithFunc` on the cell's unit model with the five remaining arguments and answers 1; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_ReqMotionBlur`** `0x1f7170`, 44 bytes: `SzEffect_ReqMotionBlur2` on the source cell with its five arguments.
+- **`SzEffect_ReqMotionBlur2`** `0x1f71a0`, 192 bytes: `SzModel_ReqMotionBlur` on the cell's unit model with the five remaining arguments (two of them colours); 0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetPauseFor3DBattle`** `0x1f7260`, 96 bytes: Sets the pause flag of the models of types 4, 5, 2 and 3 (`SzEffect_SetModelPauseForType`) and passes the same value to `SzView_PauseRequest(-1, -1, pauseFlagValue)`.
+- **`SzEffect_SetModelPause2`** `0x1f72c0`, 132 bytes: `SzModel_SetPauseFlag` on the cell's unit model; 0 when the cell is outside the grid or has no model.
+- **`SzEffect_SetModelPauseForType`** `0x1f7350`, 112 bytes: `SzModel_SetPauseFlag(i, value)` for each of the 84 models whose type equals `targetModelType`, or all of them when `targetModelType` is negative.
+- **`SzEffect_StoneProc`** `0x1f73c0`, 228 bytes: Advances the turn-to-stone effect: for models 20–29 and 30–31, a stone ratio in 0–254 (`SzModel_GetStoneRatio`) is raised by one through `SzModel_SetStoneRatio`.

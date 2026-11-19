@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "platform": "linux-x86_64-glibc-2.35",
+  "collected_on": "2026-10-03",
+  "artifacts": [
+    {
+      "tool": "mips-binutils",
+      "file": "binutils-mipsel-linux-gnu_2.38-1ubuntu1cross2_amd64.deb",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/universe/b/binutils-mipsen/binutils-mipsel-linux-gnu_2.38-1ubuntu1cross2_amd64.deb",
+      "sha256": "c0670d935d2e6e633cd55f5b03ba88b1f8b2842f91f55aced375cf65d5524ae8",
+      "upstream_digest_verified": true,
+      "executable": ".tooling/mips-binutils/usr/bin/mipsel-linux-gnu-ld",
+      "executable_sha256": "0a3f419933cd30223d6aa3cae7ac25af54863d4ff7a07a633013d37fb29a2f42",
+      "version": "2.38-1ubuntu1cross2",
+      "assembler": ".tooling/mips-binutils/usr/bin/mipsel-linux-gnu-as",
+      "assembler_sha256": "b3a444cd73334b0ad065e9b8878a8715703c08fd3d7574e9a8bc4035dd384a52"
+    },
+    {
+      "tool": "mwcps2-2.3.3",
+      "version": "2.3.3-000906",
+      "file": "mwcps2-2.3.3-000906.tar.gz",
+      "url": "https://github.com/decompme/compilers/releases/download/compilers/mwcps2-2.3.3-000906.tar.gz",
+      "sha256": "c2a4e463f8f7b324350d6bfb26d6daed83f4d5cb46df8b20dcfec8617b22ad5d",
+      "upstream_digest_verified": false,
+      "executable": ".tooling/compilers/mwcps2-2.3.3-000906/mwccps2.exe",
+      "executable_sha256": "6375fd27814a1cb7eddbc229ecbd15b57d83562f95be23804f0a06ad4814e2df"
+    },
+    {
+      "tool": "wibo",
+      "version": "1.2.0",
+      "file": "wibo-1.2.0-x86_64",
+      "url": "https://github.com/decompals/wibo/releases/download/1.2.0/wibo-x86_64",
+      "sha256": "13f86a2d618f0dbe67179d349625345eabf9b46450295cb4c904e49f6aff85af",
+      "upstream_digest_verified": true,
+      "executable": ".tooling/downloads/wibo-1.2.0-x86_64",
+      "executable_sha256": "13f86a2d618f0dbe67179d349625345eabf9b46450295cb4c904e49f6aff85af"
+    }
+  ],
+  "windows_artifacts": [
+    {
+      "tool": "mips-binutils",
+      "file": "binutils-mips-ps2-decompals-v0.10-windows-x86-64.zip",
+      "url": "https://github.com/decompals/binutils-mips-ps2-decompals/releases/download/v0.10/binutils-mips-ps2-decompals-windows-x86-64.zip",
+      "sha256": "2bb5904ee174e04f1600cc70ffdb3dc36b0efa4d1892ea446be588ba8dc6198c",
+      "upstream_digest_verified": false,
+      "install_dir": "mips-binutils-windows",
+      "executable": ".tooling/mips-binutils-windows/mips-ps2-decompals-ld.exe",
+      "executable_sha256": "e2152fdb1a6f1f960d9a7ae551541edb8a8cb4e72bc2067975b161a595295096",
+      "version": "2.40-decompals-v0.10",
+      "assembler": ".tooling/mips-binutils-windows/mips-ps2-decompals-as.exe",
+      "assembler_sha256": "0bc51ced2206339904c2da7c32da5cd3715fd43cf2dfcf8a79b78a40edbb0bb5"
+    }
+  ]
+}

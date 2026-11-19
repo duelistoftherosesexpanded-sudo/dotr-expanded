@@ -1,0 +1,8 @@
+# ROM-free checks: registry and tool tests, then the host build of all the C with its tests.
+checks:
+  image: python:3.10-bookworm
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends cmake build-essential
+  script:
+    - make test
+    - make host-check

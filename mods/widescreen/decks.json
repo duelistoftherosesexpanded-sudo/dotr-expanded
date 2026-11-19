@@ -1,0 +1,161 @@
+{
+  "about": "Decks for the second world's bosses (bosses.c boss_deck): each boss draws one at random, a new one after every duel with it. A deck is a leader and 40 cards, by the game's card names (or numbers); at most 3 of a card. \"ai\" is the duelist whose computer player plays the deck (Seto, Yugi, Pegasus ... or 0-25; tools/dlc_bosses.py DUELISTS), random_ai the one for a deck of random cards (Custom Duel: the AI SPEX gives Custom Duel). tools/dlc_bosses.py checks them.",
+  "random_ai": "Custom Duel",
+  "decks": [
+    {
+      "name": "Blue-Eyes Dragons",
+      "leader": "Blue-Eyes White Dragon",
+      "ai": "Seto",
+      "cards": {
+        "Blue-Eyes White Dragon": 2, "Red-Eyes B. Dragon": 2, "Meteor B. Dragon": 1, "B. Skull Dragon": 1,
+        "Tri-Horned Dragon": 2, "Serpent Night Dragon": 2, "Seiyaryu": 2, "Gaia the Dragon Champion": 1,
+        "Thousand Dragon": 1, "Curse of Dragon": 2, "Koumori Dragon": 2, "Darkfire Dragon": 2,
+        "Twin-Headed Thunder Dragon": 2,
+        "Dragon Treasure": 3, "Sword of Dragon's Soul": 2, "Mountain": 2, "Stop Defense": 2, "Fissure": 2,
+        "Megamorph": 2, "Dark Hole": 1, "Raigeki": 1, "Monster Reborn": 1, "Mirror Force": 1,
+        "Swords of Revealing Light": 1
+      }
+    },
+    {
+      "name": "Dark Magician",
+      "leader": "Dark Magician",
+      "ai": "Yugi",
+      "cards": {
+        "Dark Magician": 2, "Dark Magician Girl": 3, "Magician of Black Chaos": 1, "Skull Knight": 2,
+        "Dark Elf": 3, "Gemini Elf": 3, "Kazejin": 1, "Illusionist Faceless Mage": 2, "Cosmo Queen": 1,
+        "Mystical Elf": 2, "Witch of the Black Forest": 2,
+        "Dark Magic Ritual": 1, "Book of Secret Arts": 3, "Yami": 2, "Megamorph": 2, "Spellbinding Circle": 2,
+        "Swords of Revealing Light": 1, "Change of Heart": 1, "Dark Hole": 1, "Raigeki": 1,
+        "Monster Reborn": 1, "Mirror Force": 1, "Magic Jammer": 1, "Stop Defense": 1
+      }
+    },
+    {
+      "name": "Forbidden One",
+      "leader": "Exodia the Forbidden One",
+      "ai": "Yugi",
+      "cards": {
+        "Right Leg of the Forbidden One": 3, "Left Leg of the Forbidden One": 3,
+        "Right Arm of the Forbidden One": 3, "Left Arm of the Forbidden One": 3, "Millennium Shield": 2,
+        "Prevent Rat": 2, "Giant Soldier of Stone": 3, "Stone Statue of the Aztecs": 2,
+        "Spirit of the Harp": 2, "Mystical Elf": 2, "Wall Shadow": 1,
+        "Swords of Revealing Light": 2, "Gravity Bind": 2, "Negate Attack": 2, "Spellbinding Circle": 2,
+        "Book of Secret Arts": 2, "Mirror Force": 1, "Monster Reborn": 1, "Dark Hole": 1, "Raigeki": 1
+      }
+    },
+    {
+      "name": "Toon World",
+      "leader": "Toon Summoned Skull",
+      "ai": "Pegasus",
+      "cards": {
+        "Toon Summoned Skull": 2, "Toon Mermaid": 3, "Toon Alligator": 3, "Manga Ryu-Ran": 3,
+        "Summoned Skull": 2, "Dark Elf": 2, "Gemini Elf": 2, "Bickuribox": 1, "Zoa": 1, "Rogue Doll": 2,
+        "Toon World": 3, "Malevolent Nuzzler": 3, "Megamorph": 2, "Stop Defense": 2, "Shadow Spell": 2,
+        "Dark Hole": 1, "Raigeki": 1, "Change of Heart": 1, "Monster Reborn": 1, "Mirror Force": 1,
+        "Swords of Revealing Light": 1, "Fissure": 1
+      }
+    },
+    {
+      "name": "Fiends of Yami",
+      "leader": "Summoned Skull",
+      "ai": "Darkness-ruler",
+      "cards": {
+        "Summoned Skull": 2, "Zoa": 3, "Bickuribox": 2, "Fiend's Mirror": 2, "Chakra": 1, "Zera The Mant": 1,
+        "King of Yamimakai": 3, "Soul Hunter": 2, "Ushi Oni": 2, "Dragon Seeker": 1, "Ryu-Kishin Powered": 2,
+        "La Jinn the Mystical Genie of the Lamp": 2,
+        "Resurrection of Chakra": 1, "Zera Ritual": 1, "Yami": 2, "Dark Energy": 2, "Megamorph": 2,
+        "Widespread Ruin": 1, "Fissure": 2, "Dark Hole": 1, "Raigeki": 1, "Monster Reborn": 1,
+        "Change of Heart": 1, "Mirror Force": 1, "Shadow Spell": 1
+      }
+    },
+    {
+      "name": "Rise of the Dead",
+      "leader": "Pumpking the King of Ghosts",
+      "ai": "Necromancer",
+      "cards": {
+        "Pumpking the King of Ghosts": 2, "Dokurorider": 2, "Great Mammoth of Goldfine": 3,
+        "Patrician of Darkness": 3, "Castle of Dark Illusions": 2, "Skelgon": 2, "Shadow Ghoul": 2,
+        "Ghoul with an Appetite": 2, "Dragon Zombie": 2, "Armored Zombie": 2,
+        "Revival of Dokurorider": 2, "Call Of The Haunted": 2, "Yami": 2, "Megamorph": 2, "Fissure": 2,
+        "Spellbinding Circle": 2, "Monster Reborn": 1, "Graverobber": 1, "Dark Hole": 1, "Raigeki": 1,
+        "Mirror Force": 1, "Change of Heart": 1
+      }
+    },
+    {
+      "name": "Harpie Sisters",
+      "leader": "Harpie Lady Sisters",
+      "ai": "Mai",
+      "cards": {
+        "Harpie Lady": 3, "Harpie Lady Sisters": 2, "Harpie's Pet Dragon": 2, "Crimson Sunbird": 2,
+        "Punished Eagle": 2, "Monstrous Bird": 2, "Skullbird": 2, "Wing Eagle": 2, "Crow Goblin": 2,
+        "Elegant Egotist": 3, "Follow Wind": 3, "Gust Fan": 2, "Mountain": 2, "Megamorph": 2,
+        "Stop Defense": 2, "Harpie's Feather Duster": 1, "Dark Hole": 1, "Raigeki": 1, "Monster Reborn": 1,
+        "Mirror Force": 1, "Change of Heart": 1, "Swords of Revealing Light": 1
+      }
+    },
+    {
+      "name": "Gate Guardian",
+      "leader": "Gate Guardian",
+      "ai": "Labyrinth-ruler",
+      "cards": {
+        "Sanga of the Thunder": 3, "Kazejin": 3, "Suijin": 3, "Gate Guardian": 1,
+        "Twin-Headed Thunder Dragon": 2, "Thunder Nyan Nyan": 2, "Kaminari Attack": 2, "Aqua Dragon": 2,
+        "Umi ": 2,
+        "Gate Guardian Ritual": 2, "Electro-Whip": 3, "Megamorph": 2, "Fissure": 2, "Stop Defense": 2,
+        "Spellbinding Circle": 2, "Dark Hole": 1, "Raigeki": 1, "Monster Reborn": 1, "Mirror Force": 1,
+        "Swords of Revealing Light": 1, "Change of Heart": 1, "Shadow Spell": 1
+      }
+    },
+    {
+      "name": "Black Luster Warriors",
+      "leader": "Black Luster Soldier",
+      "ai": "Yugi",
+      "cards": {
+        "Black Luster Soldier": 1, "Gaia The Fierce Knight": 3, "Garma Sword": 1, "Swordstalker": 2,
+        "Judge Man": 2, "Flame Swordsman": 2, "Celtic Guardian": 3, "Axe Raider": 2, "Swamp Battleguard": 2,
+        "Lava Battleguard": 2, "Empress Judge": 2,
+        "Black Luster Ritual": 2, "Garma Sword Oath": 1, "Legendary Sword": 3, "Sogen": 2, "Megamorph": 2,
+        "Fissure": 2, "Dark Hole": 1, "Raigeki": 1, "Monster Reborn": 1, "Mirror Force": 1,
+        "Swords of Revealing Light": 1, "Stop Defense": 1
+      }
+    },
+    {
+      "name": "Great Moth",
+      "leader": "Perfectly Ultimate Great Moth",
+      "ai": "Weevil",
+      "cards": {
+        "Petit Moth": 3, "Larva of Moth": 2, "Pupa of Moth": 2, "Great Moth": 1,
+        "Perfectly Ultimate Great Moth": 1, "Javelin Beetle": 1, "Arsenal Bug": 2, "Jirai Gumo": 2,
+        "Hercules Beetle": 3, "Kwagar Hercules": 2, "Dungeon Worm": 2, "Hunter Spider": 2,
+        "Cocoon of Evolution": 3, "Javelin Beetle Pact": 1, "Insect Armor with Laser Cannon": 3, "Forest": 2,
+        "Megamorph": 2, "Dark Hole": 1, "Raigeki": 1, "Monster Reborn": 1, "Mirror Force": 1,
+        "Swords of Revealing Light": 1, "Stop Defense": 1
+      }
+    },
+    {
+      "name": "Machine Factory",
+      "leader": "Machine King",
+      "ai": "Keith",
+      "cards": {
+        "Barrel Dragon": 2, "Red-Eyes Black Metal Dragon": 1, "Metalzoa": 2, "Labyrinth Tank": 2,
+        "Launcher Spider": 2, "Machine King": 2, "Kinetic Soldier": 2, "Royal Guard": 2, "Slot Machine": 2,
+        "Mechanicalchaser": 3,
+        "Metalmorph": 3, "Machine Conversion Factory": 3, "Wasteland": 2, "Limiter Removal": 2,
+        "Megamorph": 2, "Fissure": 2, "Dark Hole": 1, "Raigeki": 1, "Monster Reborn": 1, "Mirror Force": 1,
+        "Swords of Revealing Light": 1, "Change of Heart": 1
+      }
+    },
+    {
+      "name": "Legends of the Sea",
+      "leader": "Fortress Whale",
+      "ai": "Mako",
+      "cards": {
+        "Fortress Whale": 2, "Aqua Dragon": 2, "Kairyu-Shin": 3, "Sea King Dragon": 2,
+        "Roaring Ocean Snake": 2, "Crab Turtle": 1, "Deepsea Shark": 2, "Man-eating Black Shark": 2,
+        "Suijin": 2, "Amphibious Bugroth": 2, "Umi ": 3,
+        "Fortress Whale's Oath": 2, "Turtle Oath": 1, "Hightide": 2, "Megamorph": 2, "Spellbinding Circle": 2,
+        "Fissure": 2, "Dark Hole": 1, "Raigeki": 1, "Monster Reborn": 1, "Mirror Force": 1,
+        "Swords of Revealing Light": 1, "Change of Heart": 1
+      }
+    }
+  ]
+}

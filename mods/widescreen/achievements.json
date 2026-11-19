@@ -1,0 +1,29 @@
+{
+  "about": "The mod's achievements (tools/dlc_achievements.py says what each field may be). Names and descriptions: capital letters, digits and spaces, 20 at most. A sleeve named as a reward stays locked until it is earned.",
+  "achievements": [
+    {"name": "FIRST VICTORY", "description": "WIN A DUEL", "goal": {"duels_won": 1},
+     "reward": {"sleeve": "CLASSIC"}},
+    {"name": "WAR OF THE ROSES", "description": "WIN 10 DUELS", "goal": {"duels_won": 10},
+     "reward": {"sleeve": "ROSE"}},
+    {"name": "SEASONED DUELIST", "description": "WIN 25 DUELS", "goal": {"duels_won": 25},
+     "reward": {"card": "Thousand Dragon"}},
+    {"name": "ROSE KNIGHT", "description": "WIN 50 DUELS", "goal": {"duels_won": 50},
+     "reward": {"card": "Meteor B. Dragon"}},
+    {"name": "HUNDRED DUELS", "description": "DUEL 100 TIMES", "goal": {"duels": 100},
+     "reward": {"card": "Mirror Force"}},
+    {"name": "FIRST PURCHASE", "description": "BUY A CARD", "goal": {"cards_bought": 1},
+     "reward": {"card": "Kuriboh"}},
+    {"name": "REGULAR CUSTOMER", "description": "BUY 25 CARDS", "goal": {"cards_bought": 25},
+     "reward": {"card": "Harpie's Feather Duster"}},
+    {"name": "BIG SPENDER", "description": "BUY 100 CARDS", "goal": {"cards_bought": 100},
+     "reward": {"card": "Raigeki"}},
+    {"name": "NEW CHALLENGER", "description": "BEAT A NEW PODIUM", "goal": {"bosses_beaten": 1},
+     "reward": {"card": "Swords of Revealing Light"}},
+    {"name": "CONQUEROR", "description": "BEAT 10 NEW PODIUMS", "goal": {"bosses_beaten": 10},
+     "reward": {"card": "Monster Reborn"}},
+    {"name": "COLLECTOR", "description": "OWN 300 CARDS", "goal": {"cards_owned": 300},
+     "reward": {"card": "Gate Guardian"}},
+    {"name": "CARD MASTER", "description": "OWN 600 CARDS", "goal": {"cards_owned": 600},
+     "reward": {"card": "Exodia the Forbidden One"}}
+  ]
+}
