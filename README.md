@@ -67,8 +67,9 @@ community patch.
 
 ## Tools
 
-- **Setup tool** (`tools/setup_tool.py`, or `DotR Expanded Setup.exe` in a release): builds a
-  playable disc and a portable PCSX2 from your own copies of the games. It can also make a
+- **DotR Expanded Builder** (`DotR Expanded Setup.exe` from the
+  [Releases](../../releases) page, or `tools/setup_tool.py`): drag your games onto it and it builds
+  a playable disc, set up to play in your PCSX2 with the mod's graphics settings. It can also make a
   developer copy of the project.
 - **Card Maker** (`Card Maker.bat`, `tools/card_maker.py`): add or change cards. Set the art, model,
   frame colour and era, and choose whether a test build hands out every card.
@@ -77,11 +78,44 @@ community patch.
 The mod's code is in [mods/widescreen/](mods/widescreen/) (the C in `dlc/` is loaded by the game as
 DLC.BIN) and its tools are in [tools/](tools/).
 
-## No game data
+## The games you need
 
-This repository has no disc images, models, textures, sounds or card art. The setup tool builds all
-of them on your computer from your own copies of: Duelists of the Roses (PS2, USA), The Dawn of
-Destiny (Xbox), The Falsebound Kingdom (GameCube), Cross Duel (Android) and Saikyo Card Battle (3DS).
+This repository and its releases have no disc images, models, textures, sounds or card art. The
+**DotR Expanded Builder** (`DotR Expanded Setup.exe`) makes everything on your computer from your
+own, legally acquired copies of the games:
+
+| Game | Needed? | What it gives |
+| --- | --- | --- |
+| **Yu-Gi-Oh! The Duelists of the Roses** (PlayStation 2, USA, SLUS-20515) | **Required** | the game itself |
+| Yu-Gi-Oh! Duel Monsters: Saikyo Card Battle! (Nintendo 3DS, Japan) | optional | 248 monster models, and card pictures |
+| Yu-Gi-Oh! Cross Duel (Android, the .apk) | optional | 156 monster models, and card pictures |
+| Yu-Gi-Oh! The Dawn of Destiny (Xbox, USA) | optional | 68 monster models |
+| Yu-Gi-Oh! The Falsebound Kingdom (GameCube, USA) | optional | 3 monster models |
+
+**Only Duelists of the Roses is required.** The other four add models. Without one of them, the
+cards whose models come from that game can't be collected: they stay out of your chest, and the
+computer's decks play them with a stand-in model. Everything else in the mod works. You can run the
+builder again later with more games to unlock those cards.
+
+The builder takes the files as you have them: disc images (.iso; Falsebound also as .rvz), the
+Cross Duel .apk, and Saikyo Card Battle as a decrypted .cci/.3ds or its eShop .cia. Card art comes
+from the games given, or is downloaded from the YGOPRODeck card database.
+
+## Model tools
+
+Expanded comes with tools that read the monster models of other Yu-Gi-Oh! games and turn them
+into standard **glTF (.glb)** files with their textures, a preview picture of each and a gallery
+page:
+
+| Game | Tool | Reads |
+| --- | --- | --- |
+| The Dawn of Destiny | `tools/dod_export.py`, `tools/models_dump.py --dod` | the Xbox disc's IGB models |
+| The Falsebound Kingdom | `tools/fbk_models.py`, `tools/models_dump.py --falsebound` | the GameCube disc's HSD models (MONSTER.MRG) |
+| Cross Duel | `tools/crossduel_export.py`, `tools/cross_dump.py` | the app's Unity bundles, with animations |
+| Saikyo Card Battle | `tools/bch_export.py`, `tools/saikyo_dump.py` | the 3DS game's H3D (BCH) models |
+
+The same code puts the models into Duelists of the Roses, shrunk to fit the game's model slots.
+As with the mod itself, you need your own copies of the games.
 
 ## Credits
 
@@ -96,6 +130,31 @@ Destiny (Xbox), The Falsebound Kingdom (GameCube), Cross Duel (Android) and Saik
   GenericMadScientist's DotR documentation, batzpup's Ghidra project and DOTR-Rebuilt.
 - Card art comes from [YGOPRODeck](https://ygoprodeck.com/)'s card database, downloaded by the
   setup tool.
+- **Zacksly**, for the "Xbox Series Button Icons" (CC BY) used for the Xbox button pictures.
+
+### Open-source software
+
+Expanded is built, tested and packaged with these projects. Thank you to everyone behind them.
+
+- [**PCSX2**](https://pcsx2.net/), the PlayStation 2 emulator Expanded is made for and tested in
+  (GPL-3.0). The launcher talks to it over its PINE interface for live edits.
+- [**Dolphin**](https://dolphin-emu.org/)'s DolphinTool, which the builder uses to read a
+  Falsebound Kingdom .rvz image (GPL-2.0-or-later).
+- [**wibo**](https://github.com/decompals/wibo), the [decomp.me compiler
+  collection](https://github.com/decompme/compilers) and **GNU Binutils** (MIPS), which build the
+  decompilation and the mod.
+- [**Python**](https://www.python.org/) and Tkinter, which every tool and the builder are written
+  in.
+- [**PyInstaller**](https://pyinstaller.org/), which packs the builder into one .exe.
+- [**Pillow**](https://python-pillow.org/), for every picture and texture.
+- [**UnityPy**](https://github.com/K0lb3/UnityPy), with texture2ddecoder, etcpak, astc-encoder and
+  fsb5, for reading Cross Duel's Unity bundles.
+- **pyfmodex** and fmod_toolkit, for Cross Duel's sound banks.
+- **Brotli** and archspec, used by those libraries.
+- [**CMake**](https://cmake.org/), for the decompilation's host tests.
+
+Each project keeps its own licence. None of their code is copied into this repository; the
+builder .exe carries Python and the Python libraries above, unchanged, under their licences.
 
 This is an unofficial fan project. It is not affiliated with, endorsed by or sponsored by Konami.
 Yu-Gi-Oh! and every game named here are trademarks of their respective owners.
