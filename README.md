@@ -108,8 +108,6 @@ duel. The leaders' squares are never crush terrain, and there is no labyrinth.
 - **AI SPEED** in the duel settings: FAST plays the computer's turn at double speed.
 - **Xbox button pictures** as an option in MOD OPTIONS, with the A, B, X and Y buttons.
 - **SPEX built in.** The game always plays with the DOTR SPEX community patch.
-- **A bigger save.** Your new cards, era, world, sleeve and achievements are saved with the
-  game's own save data.
 ## Tools
 
 - **DotR Expanded Builder** (`DotR Expanded Setup.exe` from the
