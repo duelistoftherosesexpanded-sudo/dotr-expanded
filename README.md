@@ -4,6 +4,10 @@
 Roses* (PS2, USA) for PCSX2. It is built on the byte-matching decompilation below and on the SPEX
 community patch.
 
+> ⚠️ **v0.55 is a beta and a proof of concept.** The new cards have **no balancing** yet: their
+> stats, effects, costs and rarities are placeholders. The mod isn't meant to be played through
+> yet, and saves from this beta may not carry over to later versions.
+
 **Pick your era of nostalgia.** Whether you grew up with Battle City, ZEXAL or today's game, you
 can play Duelists of the Roses with exactly the cards you remember. Choose your era in MOD
 OPTIONS: OG keeps the classic Duel Monsters card pool, and every era after it adds its cards on
