@@ -15,8 +15,10 @@ top, through GX, 5D's, ZEXAL, ARC-V and VRAINS up to Modern. Everyone gets the g
 
 ## What it adds
 
-- **576 new cards**, numbered past the game's original limit (up to 1448). Each one has its own
-  card art, a password and a 3D monster model in duels. The models come from other Yu-Gi-Oh! games:
+### 576 new cards with 3D models
+
+- New cards are numbered past the game's old limit (up to 1448). Each one has its own card art, a
+  password, and a 3D monster model in duels. The models come from other Yu-Gi-Oh! games:
 
   | Model source | Cards |
   | --- | --- |
@@ -26,24 +28,69 @@ top, through GX, 5D's, ZEXAL, ARC-V and VRAINS up to Modern. Everyone gets the g
   | The Falsebound Kingdom (GameCube) | 3 |
   | "Picture frame" models showing the card's art, for cards no game has a model for | 100 |
 
-- **Card eras.** Every card belongs to one of seven eras by its first TCG release: OG (before
-  2004, always on), GX (2004-08), 5D's (2008-11), ZEXAL (2011-14), ARC-V (2014-17), VRAINS (2017-20)
-  and Modern (2020 on). MOD OPTIONS on the title screen sets the newest era allowed. Choosing an era
-  also allows every era before it.
+- New cards can have effects of their own, and a monster's effect slot can hold several effects at
+  once (**stacked effects**).
+- Card pictures load as they're needed, so the deck builder can show every card, old and new.
 
-### Card frames
+### Card eras
+
+Every card belongs to one of seven eras by its first TCG release: **OG** (before 2004, always on),
+**GX** (2004-08), **5D's** (2008-11), **ZEXAL** (2011-14), **ARC-V** (2014-17), **VRAINS** (2017-20)
+and **Modern** (2020 on). Pick the newest era you want in **MOD OPTIONS** on the title screen; every
+era before it comes with it. Cards from later eras can't be obtained and stay out of your chest.
+
+### Native widescreen
+
+- The game runs in true **16:9**. The 3D view is drawn wider instead of a 4:3 picture being
+  stretched.
+- The whole 2D interface (menus, panels, the hand, the map's windows) is redrawn at its proper width,
+  so nothing looks stretched. Each piece stays pinned to its screen edge or to the centre.
+- The highlight around cards in the hand and on the field lines up with the wider 3D view.
+
+### Card shop
+
+- A **Card Shop** stands on the campaign map. Pick its podium to open it.
+- The shop shows **25 cards drawn by rarity**: Common, Rare, Super Rare, Ultra Rare, Secret Rare
+  and Ultra Secret. The stock **restocks after every campaign duel**.
+- Pick a card to buy it; it goes straight to your chest. Cards are free for now.
+- The shop is also where you choose your **card sleeve**, the back of your face-down cards.
+- It has its own shop keeper and background.
+
+### Second campaign: a whole new world
+
+- A **gate** on the campaign map leads to a **second world**: a new map with green land and blue
+  sea, with its own podiums in place of the game's locations.
+- **20 new duels** against the story's duelists, from Yugi and Seto to Pegasus and Manawyddan fab
+  Llyr. Press SQUARE at the gate to travel between the two worlds.
+- **Every boss has a pool of new decks** and draws one at random, a new one after every duel.
+- Your world is saved with the game.
+
+### Deck Masters on the map
+
+- Four **Deck Masters** (T, K, I and S) stand on new podiums on the original campaign map, from the
+  start of the campaign, on both the Lancaster and the York side.
+- Beating them counts toward the NEW CHALLENGER and CONQUEROR achievements.
+
+### Fields made for the deck
+
+In duels against the new bosses and the Deck Masters, the 7x7 board is **generated at the start of
+the duel from the opponent's deck**: patches of the terrains its monsters like best, different every
+duel. The leaders' squares are never crush terrain, and there is no labyrinth.
+
+### Achievements and rewards
+
+- **12 achievements**, from FIRST VICTORY to CARD MASTER: win duels, buy cards in the shop, beat the
+  new podiums and grow your collection.
+- Each one gives a reward: a card or a new card sleeve. An "ACHIEVEMENT UNLOCKED" pop-up shows on
+  the map and in the shop, and a trophy icon on the map.
+
+### Card frames and card sleeves
 
 - Monster cards can have **frames in new colours**, set per card in the Card Maker. Any monster can
   also use the normal (yellow) or effect (orange) frame, whatever its type.
 - The frame colour shows everywhere the card does: on the field, in the hand, in the chest and on
   the card detail panel.
-
-### Widescreen
-
-- The game is drawn in **16:9**, not 4:3 stretched.
-- The 2D interface (menus, panels, the hand) is redrawn at its proper width so nothing
-  looks stretched. Each piece stays pinned to its screen edge or to the centre.
-- The highlight around cards in the hand and on the field lines up with the wider 3D view.
+- **New card sleeves** change the back of your face-down cards. Some are achievement rewards.
 
 ### Card quality of life
 
@@ -54,26 +101,15 @@ top, through GX, 5D's, ZEXAL, ARC-V and VRAINS up to Modern. Everyone gets the g
   leader never loses a rank it has reached.
 - **Simple passwords.** Every card's password is its card number with eight digits (Blue-Eyes White
   Dragon is 00000000, card 132 is 00000132), so any card can be typed in at the deck builder.
-- **Stacked effects.** A monster's effect slot can hold more than one effect.
-- **AI SPEED** in the duel settings: FAST plays the computer's turn at double speed.
-- **Xbox button pictures** as an option in MOD OPTIONS.
 - New cards sort by name with the game's own cards in the card lists.
-- **A card shop, 12 achievements and new card sleeves** (some sleeves are achievement rewards).
-- **A bigger save.** Your collection of new cards is saved alongside the game's own save data.
 
-### Additional campaign
+### Options and convenience
 
-- **A second world.** A gate podium on the campaign map leads to a recoloured copy of the map,
-  with green land and blue sea. It has 20 new duels against the story's duelists, from Yugi and
-  Seto to Pegasus and Manawyddan fab Llyr.
-- **New decks for every boss**, one picked at random after each duel, with up to three copies of a
-  card.
-- **Deck Masters.** Four new opponents (Deck Masters T, K, I and S) stand on podiums of their own.
-  The **Card Shop** is on the map too.
-- **Fields made for the deck.** In a duel against one of these bosses the board is generated at
-  the start of the duel from the boss's deck: patches of the terrains its monsters like, different
-  every duel.
-
+- **AI SPEED** in the duel settings: FAST plays the computer's turn at double speed.
+- **Xbox button pictures** as an option in MOD OPTIONS, with the A, B, X and Y buttons.
+- **SPEX built in.** The game always plays with the DOTR SPEX community patch.
+- **A bigger save.** Your new cards, era, world, sleeve and achievements are saved with the
+  game's own save data.
 ## Tools
 
 - **DotR Expanded Builder** (`DotR Expanded Setup.exe` from the
