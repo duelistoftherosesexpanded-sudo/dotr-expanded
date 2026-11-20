@@ -4,6 +4,11 @@
 Roses* (PS2, USA) for PCSX2. It is built on the byte-matching decompilation below and on the SPEX
 community patch.
 
+**Pick your era of nostalgia.** Whether you grew up with Battle City, ZEXAL or today's game, you
+can play Duelists of the Roses with exactly the cards you remember. Choose your era in MOD
+OPTIONS: OG keeps the classic Duel Monsters card pool, and every era after it adds its cards on
+top, through GX, 5D's, ZEXAL, ARC-V and VRAINS up to Modern. Everyone gets the game they want.
+
 ## What it adds
 
 - **576 new cards**, numbered past the game's original limit (up to 1448). Each one has its own
