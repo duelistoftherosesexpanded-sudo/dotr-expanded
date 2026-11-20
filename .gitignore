@@ -36,11 +36,10 @@ __pycache__/
 /dotr-dod-models/
 /falsebound/
 /frontlines/
-/mods/widescreen/art/
+/mods/widescreen/art/*
+!/mods/widescreen/art/xbox_buttons.png
 /mods/widescreen/models/
 /mods/widescreen/textures/
-/mods/widescreen/sleeves/
-/mods/widescreen/shop/
 /mods/*/my-dlc/
 *.cia
 *.cci

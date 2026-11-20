@@ -23,7 +23,8 @@ for package in ("UnityPy", "PIL", "fsb5", "texture2ddecoder", "etcpak", "astc_en
 hiddenimports += ["dod_export", "igb_read", "hsd_anim", "crossduel_export", "dlc_cards", "dlc_title", "dlc_world",
                   "dlc_community", "model_skinned", "model_import", "model_texture", "model_research", "glb_anim",
                   "fbx_anim", "fbx_read", "card_edit", "iso_files", "research", "runtime", "gui_theme",
-                  "bch_read", "bch_export", "ctr_read", "glb_anim", "model_texture", "dod_models", "frame_model"]
+                  "bch_read", "bch_export", "ctr_read", "glb_anim", "model_texture", "dod_models", "frame_model",
+                  "dlc_regen", "dlc_buttons", "dlc_frames", "dlc_sleeves", "dlc_shop", "project"]
 
 icon = os.path.join(PROJECT, "launcher", "icon.ico")
 a = Analysis([os.path.join(SPECPATH, "setup_tool.py")], pathex=[SPECPATH], binaries=binaries, datas=datas,

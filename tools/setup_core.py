@@ -512,6 +512,24 @@ def prepare_workspace(release, workspace, dotr_iso):
     return info, exe
 
 
+def regen_into(code, regen, mod, dotr_iso, say=print):
+    """Writes into DLC.BIN (bytearray) what the release left out of it because it is made from the
+    game's disc (release.json "regen", tools/dlc_regen.py): the button pictures, frame colours,
+    sleeves and shop pictures, made again from the player's own Duelists of the Roses."""
+    if not regen:
+        return
+    import dlc_regen
+    say("Making the textures from your Duelists of the Roses disc...")
+    made = dlc_regen.arrays(mod, dotr_iso)
+    for r in regen:
+        data = made.get(r["key"])
+        if data is None or len(data) != r["size"] or sha256(data) != r["sha256"]:
+            raise ValueError(f"{r['key']}: what your disc gives differs from this release's. "
+                             "Is it the USA Duelists of the Roses, unchanged?")
+        for a in r["offsets"]:
+            code[a:a + len(data)] = data
+
+
 def build_disc(release, workspace, dotr_iso, target, statuses, say=print):
     """The finished disc image at `target`: the player's Duelists of the Roses with the mod's
     program, DLC.BIN (each new card's status written in, the models after the code), the new
@@ -532,6 +550,7 @@ def build_disc(release, workspace, dotr_iso, target, statuses, say=print):
     original = (workspace / "out/ntsc-u/SLUS_205.15").read_bytes()
     image = bytearray(apply_patch(original, (release / "SLUS_205.15.patch").read_bytes()))
     code = bytearray((release / "DLC.BIN").read_bytes())
+    regen_into(code, info["dlc"].get("regen", []), release / "mods" / "widescreen", dotr_iso, say)
     at = info["dlc"]["status_offset"]
     for number, status in statuses.items():
         code[at + int(number)] = dlc_cards.STATUSES.index(status)

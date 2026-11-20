@@ -483,6 +483,13 @@ def self_test(args):
         lines.append(f"release: {len(cards)} cards")
         with tempfile.TemporaryDirectory() as tmp:
             for kind, path in (a.split("=", 1) for a in args[1:]):
+                if kind == "dotr":
+                    # The textures DLC.BIN is given from the player's disc (setup_core.regen_into).
+                    info = json.loads((RELEASE / "release.json").read_text())
+                    code = bytearray((RELEASE / "DLC.BIN").read_bytes())
+                    core.regen_into(code, info["dlc"]["regen"], RELEASE / "mods" / "widescreen", path, lines.append)
+                    lines.append(f"dotr: {len(info['dlc']['regen'])} textures made, DLC.BIN sha256 {core.sha256(bytes(code))}")
+                    continue
                 source = core.open_source(kind, path, Path(tmp), say=lines.append)
                 card = next(c for c in cards if c.get("game") == kind)
                 core.run_recipe(card["recipe"], source, Path(tmp) / card["folder"])

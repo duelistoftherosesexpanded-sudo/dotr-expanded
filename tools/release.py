@@ -45,8 +45,9 @@ MOD = ROOT / "mods" / "widescreen"
 GAME = ROOT / "launcher" / "game"
 VERSION = "0.55-beta"
 # The mod's own files a player's build needs (no game data).
-OWN_FILES = ["community.json", "title/expanded.png", "deck_wallpaper.png", "placeholder.png"]
-OWN_DIRS = ["community"]
+OWN_FILES = ["community.json", "title/expanded.png", "deck_wallpaper.png", "placeholder.png",
+             "art/xbox_buttons.png"]                       # (Zacksly's icon sheet, CC BY)
+OWN_DIRS = ["community", "sleeves", "shop"]                # (the developer's own pictures)
 
 
 def recipe_of(model):
@@ -148,11 +149,24 @@ def main():
     # Players start without the free cards (give-all stays as the Card Maker sets it in the dev build).
     give_all = build["symbols"]["dlc_give_all"]
     code[give_all:give_all + 2] = bytes(2)
+    # What the DLC holds of the disc (textures' headers, palettes and pixels) is left out: the
+    # setup tool makes it again from the player's disc (tools/dlc_regen.py).
+    import dlc_regen
+    regen = []
+    for key, data in dlc_regen.arrays(MOD, iso).items():
+        at = dlc_regen.places(bytes(code), data)
+        if not at:
+            raise SystemExit(f"{key} is not in launcher/game/DLC.BIN: build again")
+        for offset in at:
+            code[offset:offset + len(data)] = bytes(len(data))
+        regen.append(dict(key=key, offsets=at, size=len(data), sha256=core.sha256(data)))
+    print(f"left out of DLC.BIN: {len(regen)} arrays made from the disc, {sum(r['size'] for r in regen)} bytes")
     (out / "DLC.BIN").write_bytes(bytes(code))
     (out / "release.json").write_text(json.dumps(dict(
         version=VERSION,
         slus=dict(iso_extent=build["iso_extent"], size=len(changed), original_sha256=core.sha256(original)),
-        dlc=dict(info_offset=build["info_offset"], status_offset=build["symbols"]["dlc_card_status"])), indent=1))
+        dlc=dict(info_offset=build["info_offset"], status_offset=build["symbols"]["dlc_card_status"],
+                 regen=regen)), indent=1))
     write_graphics(out)
 
     # The mod's own files.
