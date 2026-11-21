@@ -1,4 +1,4 @@
-/baserom/*
+﻿/baserom/*
 !/baserom/README
 !/baserom/README.md
 /build/
@@ -52,4 +52,6 @@ __pycache__/
 *.exe
 /tools/fbk_hsd_render.py
 
-/tools/record/.recording
+# Our own tools for trailers and Shorts, kept out of the public repo.
+/tools/record/
+/tools/dotr_music.py
