@@ -42,6 +42,7 @@ os.environ["DOTR_ROOT"] = str(WORK)      # before the project's tools are import
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import setup_core as core  # noqa: E402
+import pcsx2_find  # noqa: E402
 
 GAMES = [("dotr", "Yu-Gi-Oh! The Duelists of the Roses (PS2, North America) - needed", "Disc image", "*.iso"),
          ("dod", "Yu-Gi-Oh! The Dawn of Destiny (Xbox)", "Disc image", "*.iso"),
@@ -351,6 +352,18 @@ class Setup(tk.Tk):
         if not self.ok.get("dotr"):
             messagebox.showerror(TITLE, "Choose your Yu-Gi-Oh! The Duelists of the Roses disc image first.")
             return
+        self.pcsx2 = None
+        if self.kind.get() != "dev":
+            # The player build copies the player's PCSX2: found, or pointed to by the player.
+            out_emu = Path(self.out.get()) / "PCSX2"
+            self.pcsx2 = pcsx2_find.find(skip=[out_emu])
+            if self.pcsx2 is None and not (out_emu / pcsx2_find.EXE).is_file():
+                self.pcsx2 = pcsx2_find.ask(self, TITLE)
+                if self.pcsx2 is None:
+                    self.say("No PCSX2 chosen: install PCSX2 (or unzip it), then build again.")
+                    return
+            if self.pcsx2:
+                self.say(f"PCSX2: {self.pcsx2}")
         self.build_button.state(["disabled"])
         threading.Thread(target=self.run, daemon=True).start()
 
@@ -428,18 +441,20 @@ class Setup(tk.Tk):
         cards, the mod's graphics settings, the extra memory the mod needs, and a Play shortcut."""
         import configparser
         emu = out / "PCSX2"
+        installed = getattr(self, "pcsx2", None) or pcsx2_find.find(skip=[emu])
+        pcsx2_data = pcsx2_find.data_folder(installed) if installed else PCSX2_DATA
         if not (emu / "pcsx2-qt.exe").is_file():
-            if not (INSTALLED_PCSX2 / "pcsx2-qt.exe").is_file():
-                raise ValueError(f"PCSX2 is not installed in {INSTALLED_PCSX2}: install PCSX2 (with your own BIOS) "
-                                 "and build again.")
-            self.say("Copying PCSX2...")
-            shutil.copytree(INSTALLED_PCSX2, emu, dirs_exist_ok=True)
+            if not installed:
+                raise ValueError("PCSX2 was not found: install PCSX2 (with your own BIOS) and build again.")
+            self.say(f"Copying PCSX2 from {installed}...")
+            shutil.copytree(installed, emu, dirs_exist_ok=True,
+                            ignore=shutil.ignore_patterns("memcards", "sstates", "snaps", "cache", "logs"))
         (emu / "portable.txt").write_text("")
         ini = configparser.RawConfigParser(strict=False, interpolation=None, delimiters=("=",),
                                            comment_prefixes=("#",), inline_comment_prefixes=None)
         ini.optionxform = str
         own = emu / "inis" / "PCSX2.ini"
-        source = own if own.is_file() else PCSX2_DATA / "inis" / "PCSX2.ini"
+        source = own if own.is_file() else pcsx2_data / "inis" / "PCSX2.ini"
         if source.is_file():
             ini.read(source, encoding="utf-8-sig")
         # The graphics settings the mod was made with (tools/release.py pcsx2_graphics).
@@ -460,7 +475,7 @@ class Setup(tk.Tk):
         for key in ("Bios", "MemoryCards", "Savestates", "Snapshots", "Cheats", "Patches", "InputProfiles"):
             value = ini.get("Folders", key, fallback=key.lower())
             if not Path(value).is_absolute():
-                value = str(PCSX2_DATA / value)
+                value = str(pcsx2_data / value)
             ini.set("Folders", key, value)
         own.parent.mkdir(exist_ok=True)
         with own.open("w", encoding="utf-8") as f:

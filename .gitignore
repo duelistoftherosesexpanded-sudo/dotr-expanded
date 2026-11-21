@@ -51,3 +51,5 @@ __pycache__/
 *.dat
 *.exe
 /tools/fbk_hsd_render.py
+
+/tools/record/.recording

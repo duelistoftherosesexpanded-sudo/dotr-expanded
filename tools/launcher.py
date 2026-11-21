@@ -87,6 +87,40 @@ def read_ini(path):
     return ini
 
 
+def repeated_keys(path):
+    """{(section, key): [values]} for keys PCSX2 writes more than once in a section: a controller
+    button bound to a gamepad button and a key, say. configparser keeps only the last of them."""
+    found, section = {}, None
+    if path.is_file():
+        for line in path.read_text(encoding="utf-8-sig").splitlines():
+            s = line.strip()
+            if s.startswith("[") and s.endswith("]"):
+                section = s[1:-1]
+            elif "=" in s and section is not None and not s.startswith("#"):
+                key, value = (p.strip() for p in s.split("=", 1))
+                found.setdefault((section, key), []).append(value)
+    return {k: v for k, v in found.items() if len(v) > 1}
+
+
+def write_ini(ini, path, repeated):
+    """Writes the settings, each repeated key (repeated_keys) once per value again."""
+    import io
+    text = io.StringIO()
+    ini.write(text, space_around_delimiters=True)
+    out, section = [], None
+    for line in text.getvalue().splitlines():
+        s = line.strip()
+        if s.startswith("[") and s.endswith("]"):
+            section = s[1:-1]
+        elif "=" in s and section is not None:
+            key = s.split("=", 1)[0].strip()
+            if (section, key) in repeated:
+                out.extend(f"{key} = {value}" for value in repeated[(section, key)])
+                continue
+        out.append(line)
+    path.write_text("\n".join(out) + "\n", encoding="utf-8")
+
+
 def setup_emulator(say, dump_textures=False):
     """The launcher's own PCSX2: a copy of the installed program in portable mode. Its settings
     start as a copy of the installed PCSX2's (the first time) and are its own after that, so
@@ -96,11 +130,17 @@ def setup_emulator(say, dump_textures=False):
     Texture replacement is on, from the launcher's own folder (launcher/textures/<serial>/
     replacements, PCSX2's names); dump_textures also saves each texture the game uses to
     launcher/textures/<serial>/dumps, to learn a texture's name."""
+    global USER_DATA
+    import pcsx2_find
+    installed = pcsx2_find.find(skip=[EMU])
+    if installed:
+        USER_DATA = pcsx2_find.data_folder(installed)
     if not EXE.is_file():
-        if not (INSTALLED / "pcsx2-qt.exe").is_file():
-            raise RuntimeError(f"PCSX2 is not installed in {INSTALLED}")
-        say(f"Copying PCSX2 from {INSTALLED} (once)...")
-        shutil.copytree(INSTALLED, EMU, dirs_exist_ok=True)
+        if not installed:
+            raise RuntimeError("PCSX2 was not found: choose where it is (the launcher asks), or install it")
+        say(f"Copying PCSX2 from {installed} (once)...")
+        shutil.copytree(installed, EMU, dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("memcards", "sstates", "snaps", "cache", "logs"))
     # Empty: PCSX2 takes any text in it as the folder for its settings and data.
     (EMU / "portable.txt").write_text("")
     try:
@@ -112,7 +152,9 @@ def setup_emulator(say, dump_textures=False):
     first = not own.is_file()
     if first:
         say("Taking the settings of your installed PCSX2 (once).")
-    user = read_ini(USER_DATA / "inis" / "PCSX2.ini" if first else own)
+    source = USER_DATA / "inis" / "PCSX2.ini" if first else own
+    user = read_ini(source)
+    repeated = repeated_keys(source)
     for section, values in {
         "EmuCore": {"EnablePINE": "true", "PINESlot": str(PORT), "HostFs": "true"},
         "EmuCore/CPU": {"ExtraMemory": "true"},
@@ -139,8 +181,7 @@ def setup_emulator(say, dump_textures=False):
     TEXTURES.mkdir(parents=True, exist_ok=True)
     user.set("Folders", "Textures", str(TEXTURES))
     (EMU / "inis").mkdir(exist_ok=True)
-    with (EMU / "inis" / "PCSX2.ini").open("w", encoding="utf-8") as f:
-        user.write(f, space_around_delimiters=True)
+    write_ini(user, EMU / "inis" / "PCSX2.ini", repeated)
     # Per-game settings: the installed PCSX2's, only where the launcher's PCSX2 has none of its own.
     if (USER_DATA / "gamesettings").is_dir():
         (EMU / "gamesettings").mkdir(exist_ok=True)
@@ -455,7 +496,19 @@ class Launcher(tk.Tk):
             return
         self.start()
 
+    def find_pcsx2(self):
+        """True when the launcher has a PCSX2 (its own copy, or one found or chosen to copy)."""
+        import pcsx2_find
+        if EXE.is_file() or pcsx2_find.find(skip=[EMU]):
+            return True
+        if pcsx2_find.ask(self, "DotR Launcher"):
+            return True
+        self.say("No PCSX2 chosen: install PCSX2 (or unzip it), then press Play again.")
+        return False
+
     def start(self):
+        if not self.find_pcsx2():
+            return
         dump = self.dump_textures.get()
 
         def run():
@@ -509,6 +562,8 @@ class Launcher(tk.Tk):
         Play). Not while the game runs: both would write the settings file."""
         if self.running():
             self.say("Stop the game first, then open PCSX2's settings.")
+            return
+        if not self.find_pcsx2():
             return
         try:
             setup_emulator(self.say, self.dump_textures.get())
