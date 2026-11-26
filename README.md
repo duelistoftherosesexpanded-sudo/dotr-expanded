@@ -1,9 +1,7 @@
 # Duelists of the Roses Expanded
 
 **Duelists of the Roses Expanded** (v0.55 beta) is a fan mod of *Yu-Gi-Oh! The Duelists of the
-Roses* (PS2, USA) for PCSX2. It is built on the byte-matching decompilation below and on the SPEX
-community patch.
-
+Roses* (PS2, USA) for PCSX2. 
 > ⚠️ **v0.55 is a beta and a proof of concept.** The new cards have **no balancing** yet: their
 > stats, effects, costs and rarities are placeholders. The mod isn't meant to be played through
 > yet, and saves from this beta may not carry over to later versions.
@@ -162,14 +160,14 @@ As with the mod itself, you need your own copies of the games.
 
 ## Credits
 
-- **zusk**, for the byte-by-byte matching decompilation of Duelists of the Roses below. Expanded
+- **zusk**, . Expanded
   could not exist without it: every new feature is written against its C code and names.
 - **Starlight Phoenix Project**, for [DOTR SPEX](mods/widescreen/community/spex/LICENSE.txt). The
   game Expanded plays is always SPEX 1.0, and the SPEX extra patches are offered too (CC BY 4.0).
 - **batzpup**, for [DotrModdingToolRedux](https://github.com/batzpup/DotrModdingToolRedux), whose
   card and image layouts guided our card editing tools (no code copied).
-- The wider DotR community and research the decompilation draws on, listed in
-  [docs/REFERENCES.md](docs/REFERENCES.md): kira-502's parallel decompilation,
+- The wider DotR community  draws on, listed in
+  [docs/REFERENCES.md](docs/REFERENCES.md): ,
   GenericMadScientist's DotR documentation, batzpup's Ghidra project and DOTR-Rebuilt.
 - Card art comes from [YGOPRODeck](https://ygoprodeck.com/)'s card database, downloaded by the
   setup tool.
@@ -183,9 +181,6 @@ Expanded is built, tested and packaged with these projects. Thank you to everyon
   (GPL-3.0). The launcher talks to it over its PINE interface for live edits.
 - [**Dolphin**](https://dolphin-emu.org/)'s DolphinTool, which the builder uses to read a
   Falsebound Kingdom .rvz image (GPL-2.0-or-later).
-- [**wibo**](https://github.com/decompals/wibo), the [decomp.me compiler
-  collection](https://github.com/decompme/compilers) and **GNU Binutils** (MIPS), which build the
-  decompilation and the mod.
 - [**Python**](https://www.python.org/) and Tkinter, which every tool and the builder are written
   in.
 - [**PyInstaller**](https://pyinstaller.org/), which packs the builder into one .exe.
@@ -194,7 +189,7 @@ Expanded is built, tested and packaged with these projects. Thank you to everyon
   fsb5, for reading Cross Duel's Unity bundles.
 - **pyfmodex** and fmod_toolkit, for Cross Duel's sound banks.
 - **Brotli** and archspec, used by those libraries.
-- [**CMake**](https://cmake.org/), for the decompilation's host tests.
+
 
 Each project keeps its own licence. None of their code is copied into this repository; the
 builder .exe carries Python and the Python libraries above, unchanged, under their licences.
@@ -204,10 +199,8 @@ Yu-Gi-Oh! and every game named here are trademarks of their respective owners.
 
 ---
 
-# Duelists of the Roses decompilation
+# Duelists of the Roses 
 
-A byte-matching decompilation of **Yu-Gi-Oh! The Duelists of the Roses** for the PlayStation 2,
-USA release (`SLUS_205.15`).
 
 Every function of the game's own code in the main executable is written in C that the original
 compiler turns into exactly the original bytes: **2,568 functions, 1,405,804 bytes** (2,555 in C,
@@ -265,7 +258,7 @@ make rebuild      # build the whole executable and compare it byte for byte
 
 | Document | |
 | --- | --- |
-| [Matching rules](docs/DECOMPILATION.md) | what counts as a match, compiler and flags, what a source may contain, scope |
+|
 | [Modules](docs/modules/README.md) | every function, by original module, with a description |
 | [Game data](docs/GAME_DATA.md) | identifiers, tables, decks, campaign, save data |
 | [Architecture](docs/ARCHITECTURE.md) | how the program is organised |
@@ -276,11 +269,6 @@ make rebuild      # build the whole executable and compare it byte for byte
 
 ## Credits
 
-- Code for about 165 functions (about 395 kB, including the hardest), and the original-file and
-  warm-compile techniques that made the last of them match, come from
-  [kira-502/dotr-decomp](https://github.com/kira-502/dotr-decomp) (CC0-1.0); the functions are
-  listed in [docs/CREDITS.md](docs/CREDITS.md).
-- Data labels, structure and enum definitions, parameter names and comments draw on
-  reverse-engineering work by **batzpup** (Ghidra project for `SLUS_205.15`, 2019), used with
+
   permission; details in [docs/CREDITS.md](docs/CREDITS.md).
 - Other references are listed in [docs/REFERENCES.md](docs/REFERENCES.md).
