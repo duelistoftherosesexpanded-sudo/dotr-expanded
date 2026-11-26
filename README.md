@@ -270,5 +270,5 @@ make rebuild      # build the whole executable and compare it byte for byte
 ## Credits
 
 
-  permission; details in [docs/CREDITS.md](docs/CREDITS.md).
+
 - Other references are listed in [docs/REFERENCES.md](docs/REFERENCES.md).
